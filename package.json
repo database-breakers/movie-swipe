@@ -1,0 +1,23 @@
+{
+  "name": "movie-swipe",
+  "version": "1.0.0",
+  "description": "Tinder for your group movie nights.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/database-breakers/movie-swipe.git"
+  },
+  "author": "Database Breakers",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/database-breakers/movie-swipe/issues"
+  },
+  "homepage": "https://github.com/database-breakers/movie-swipe#readme",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1"
+  }
+}
