@@ -8,7 +8,7 @@ router.get('/genre', function(req, res){
     db.query("SELECT distinct genre FROM Movie_genre", function (err, result, fields){
         if (err) throw err;
         result = result.map(r => r.genre);
-        res.send(result);
+        res.send(result.sort());
     })
 })
 
