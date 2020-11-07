@@ -34,7 +34,7 @@ router.route('/writer/:id').get(function(req, res){
 router.route('/genre/:id').get(function(req, res){
     // Get genre(s) for movie by ID
     imdb_id = req.params.id;
-    db.query("SELECT writer FROM Movie_genre WHERE imdb_id = ?", imdb_id, function (err, result, fields){
+    db.query("SELECT genre FROM Movie_genre WHERE imdb_id = ?", imdb_id, function (err, result, fields){
         if (err) throw err;
         result = result.map(r => r["genre"])
         res.send(result);
