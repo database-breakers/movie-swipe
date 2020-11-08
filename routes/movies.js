@@ -1,65 +1,51 @@
-const { Router } = require('express');
 const db = require('../db.js');
 const router = require('express').Router();
 
-
-router.get('/genre', function(req, res){
+router.get('/genre', async (req, res) => {
     // Get genre(s) available
-    db.query("SELECT distinct genre FROM Movie_genre", function (err, result, fields){
-        if (err) throw err;
-        result = result.map(r => r.genre);
-        res.send(result.sort());
-    })
+    result = await db.getGenreList();
+    res.send(result.sort());
 })
 
-router.get('/director/:id', function(req, res){
+router.get('/director/:id', async (req, res) => {
     // Get director(s) for movie by ID
     imdb_id = req.params.id;
-    db.query("SELECT director FROM Movie_director WHERE imdb_id = ?", imdb_id, function (err, result, fields){
-        if (err) throw err;
-        result = result.map(r => r.director)
-        res.send(result);
-    })
+    result = await db.getDirector(imdb_id);
+    res.send(result);
 })
 
-router.get('/writer/:id',function(req, res){
+router.get('/writer/:id', async (req, res) => {
     // Get writer(s) for movie by ID
     imdb_id = req.params.id;
-    db.query("SELECT writer FROM Movie_writer WHERE imdb_id = ?", imdb_id, function (err, result, fields){
-        if (err) throw err;
-        result = result.map(r => r.writer)
-        res.send(result);
-    })
+    result = await db.getWriter(imdb_id);
+    res.send(result);
 })
 
-router.get('/genre/:id', function(req, res){
+router.get('/genre/:id', async (req, res) => {
     // Get genre(s) for movie by ID
     imdb_id = req.params.id;
-    console.log("In genre/id")
-    db.query("SELECT genre FROM Movie_genre WHERE imdb_id = ?", imdb_id, function (err, result, fields){
-        if (err) throw err;
-        result = result.map(r => r.genre)
-        res.send(result);
-    })
+    result = await db.getGenre(imdb_id);
+    res.send(result);
 })
 
-router.get('/actor/:id', function(req, res){
+router.get('/actor/:id', async (req, res) => {
     // Get genre(s) for movie by ID
     imdb_id = req.params.id;
-    db.query("SELECT actor FROM Movie_actor WHERE imdb_id = ?", imdb_id, function (err, result, fields){
-        if (err) throw err;
-        result = result.map(r => r.actor)
-        res.send(result);
-    })
+    result = await db.getActor(imdb_id);
+    res.send(result);
 })
 
-router.get('/:id', function(req, res){
+router.get('/:id', async (req, res) => {
     // Get movie details by ID
     imdb_id = req.params.id;
-    db.query("SELECT * FROM Movie WHERE imdb_id = ?", imdb_id, function (err, result, fields){
-        if (err) throw err;
-        res.send(result);
-    })
+    result = await db.getMovie(imdb_id);
+    if(req.query.full === "1"){
+        result[0].actor = await db.getActor(imdb_id);
+        result[0].director = await db.getDirector(imdb_id);
+        result[0].writer = await db.getWriter(imdb_id);
+        result[0].genre = await db.getGenre(imdb_id);
+    }
+    res.send(result);
 })
 
 module.exports = router;
