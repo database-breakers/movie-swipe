@@ -9,9 +9,15 @@ var movies = require('./routes/movies.js')
 var user = require('./routes/user.js')
 
 const port = process.env.PORT;
+const sessionSecret = process.env.SESSIONSECRET;
 
 app.use(express.json());
 app.use(bodyParser.json());
+app.use(session({
+	secret: sessionSecret,
+	resave: true,
+	saveUninitialized: true
+}));
 
 app.get('/', (req,res) => {
 	res.send("Hello world!");

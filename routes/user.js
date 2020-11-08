@@ -4,8 +4,27 @@ const router = require('express').Router();
 router.post('/createUser', async (req, res) => {
     username = req.body.username;
     password = req.body.password;
-    result = await db.createUser(username, password);
-    res.send(result);
+    if(username && password){
+        result = await db.createUser(username, password);
+        res.send(result);
+    }
+    else{
+        res.send("No username or password provided.");
+    }
+})
+
+router.post('/signin', async (req, res) => {
+    username = req.body.username;
+    password = req.body.password;
+    if(username && password){
+        result = await db.signIn(username, password, req)
+        res.send(result);
+    }
+
+})
+
+router.post('/signout', async (req, res) => {
+    
 })
 
 /**

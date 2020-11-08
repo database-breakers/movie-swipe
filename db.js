@@ -1,5 +1,6 @@
 const mysql = require('mysql');
 const bcrypt = require('bcrypt');
+const { request } = require('express');
 require('dotenv').config()
 
 var saltRounds = 10;
@@ -21,7 +22,7 @@ db.connect(function(err){
  */
 async function getWriter(imdb_id){
     return new Promise (data => 
-        db.query("SELECT writer FROM Movie_writer WHERE imdb_id = ?", imdb_id, function (err, result, fields){
+        db.query("SELECT writer FROM Movie_writer WHERE imdb_id = ?", imdb_id, (err, result, fields) => {
             if (err) throw err;
             result = result.map(r => r.writer)
             data(result)
@@ -35,7 +36,7 @@ async function getWriter(imdb_id){
  */
 async function getDirector(imdb_id){
     return new Promise (data => 
-        db.query("SELECT director FROM Movie_director WHERE imdb_id = ?", imdb_id, function (err, result, fields){
+        db.query("SELECT director FROM Movie_director WHERE imdb_id = ?", imdb_id, (err, result, fields) => {
             if (err) throw err;
             result = result.map(r => r.director)
             data(result)
@@ -49,7 +50,7 @@ async function getDirector(imdb_id){
  */
 async function getGenre(imdb_id){
     return new Promise (data => 
-        db.query("SELECT genre FROM Movie_genre WHERE imdb_id = ?", imdb_id, function (err, result, fields){
+        db.query("SELECT genre FROM Movie_genre WHERE imdb_id = ?", imdb_id, (err, result, fields) => {
             if (err) throw err;
             result = result.map(r => r.genre)
             data(result)
@@ -63,7 +64,7 @@ async function getGenre(imdb_id){
  */
 async function getActor(imdb_id){
     return new Promise (data => 
-        db.query("SELECT actor FROM Movie_actor WHERE imdb_id = ?", imdb_id, function (err, result, fields){
+        db.query("SELECT actor FROM Movie_actor WHERE imdb_id = ?", imdb_id, (err, result, fields) => {
             if (err) throw err;
             result = result.map(r => r.actor)
             data(result)
@@ -77,7 +78,7 @@ async function getActor(imdb_id){
  */
 async function getMovie(imdb_id){
     return new Promise (data => 
-        db.query("SELECT * FROM Movie WHERE imdb_id = ?", imdb_id, function (err, result, fields){
+        db.query("SELECT * FROM Movie WHERE imdb_id = ?", imdb_id, (err, result, fields) => {
             if (err) throw err;
             data(result[0])
         })
@@ -89,7 +90,7 @@ async function getMovie(imdb_id){
  */
 async function getGenreList(){
     return new Promise (data => 
-        db.query("SELECT distinct genre FROM Movie_genre", function (err, result, fields){
+        db.query("SELECT distinct genre FROM Movie_genre", (err, result, fields) => {
             if (err) throw err;
             result = result.map(r => r.genre);
             data(result)
@@ -105,7 +106,7 @@ async function getGenreList(){
 async function createUser(username, password){
     return new Promise (data => 
         bcrypt.hash(password, saltRounds, (err, hash) => {
-            db.query("INSERT INTO User VALUES (?, ?, ?, ?)", [username, hash, "0", username], function (err, result, fields){
+            db.query("INSERT INTO User VALUES (?, ?, ?, ?)", [username, hash, "0", username], (err, result, fields) => {
                 if(err){
                     if (err.code === "ER_DUP_ENTRY"){
                         result = {
@@ -114,16 +115,48 @@ async function createUser(username, password){
                     }
                     // TODO: Fix this error code in schema.
                     else if(err.code === "UNKNOWN_CODE_PLEASE_REPORT"){
-                        ressult = {
+                        result = {
                             "error": "Username too short"
                         };
                     }
                     else{
-                        throw err;
+                        result ={
+                            "error": "Unhandled error."
+                        };
                     }
                 }
                 data(result);
             })
+        })
+    )
+}
+
+async function signIn(username, password, request){
+    return new Promise (data =>
+        db.query("SELECT * FROM User WHERE username = ?", username, (err, result, fields) => {
+            if (result.length > 0){
+                // Check password
+                bcrypt.compare(password, result[0].pw_hash, (err, check) => {
+                    if(check){
+                        // Establish session.
+                        request.session.loggedin = true;
+                        request.session.username = username;
+                        data({
+                            "success": true,
+                            "redirect": "/home"
+                        })
+                    }
+                    else{
+                        // Return invalid user/pass.
+                        data( {"error": "Invalid username/password."} )
+                    }
+
+                })
+            }
+            else{
+                // Username does not exist, return invalid user/pass.
+                data( {"error": "Invalid username/password."} )
+            }
         })
     )
 }
@@ -146,5 +179,6 @@ module.exports = {
     getMovie,
     getWriter,
     createUser,
-    generateTestUsers
+    generateTestUsers,
+    signIn
 };
