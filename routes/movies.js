@@ -44,6 +44,7 @@ router.get('/:id', async (req, res) => {
             throw new Error("Movie not found.");
         }
         if(req.query.full === "1"){
+            // Get full results
             result.actor = await db.getActor(imdb_id);
             result.director = await db.getDirector(imdb_id);
             result.writer = await db.getWriter(imdb_id);
