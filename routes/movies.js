@@ -38,14 +38,22 @@ router.get('/actor/:id', async (req, res) => {
 router.get('/:id', async (req, res) => {
     // Get movie details by ID
     imdb_id = req.params.id;
-    result = await db.getMovie(imdb_id);
-    if(req.query.full === "1"){
-        result[0].actor = await db.getActor(imdb_id);
-        result[0].director = await db.getDirector(imdb_id);
-        result[0].writer = await db.getWriter(imdb_id);
-        result[0].genre = await db.getGenre(imdb_id);
+    try{
+        result = await db.getMovie(imdb_id);
+        if(result === undefined){
+            throw new Error("Movie not found.");
+        }
+        if(req.query.full === "1"){
+            result.actor = await db.getActor(imdb_id);
+            result.director = await db.getDirector(imdb_id);
+            result.writer = await db.getWriter(imdb_id);
+            result.genre = await db.getGenre(imdb_id);
+        }
+        res.send(result);
     }
-    res.send(result);
+    catch(err){
+        res.send({"error": err.message});
+    }
 })
 
 module.exports = router;

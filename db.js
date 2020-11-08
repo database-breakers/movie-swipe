@@ -56,7 +56,7 @@ async function getActor(imdb_id){
 async function getMovie(imdb_id){
     return new Promise (data => db.query("SELECT * FROM Movie WHERE imdb_id = ?", imdb_id, function (err, result, fields){
         if (err) throw err;
-        data(result)
+        data(result[0])
     }))
 }
 
