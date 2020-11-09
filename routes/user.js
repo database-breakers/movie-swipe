@@ -33,6 +33,38 @@ router.post('/signout', async (req, res) => {
     });  
 })
 
+router.post('/changepassword', async (req, res) => {
+    username = req.body.username;
+    oldPassword = req.body.oldpassword;
+    newPassword = req.body.newpassword;
+    if(username && oldPassword && newPassword){
+        result = await db.changePassword(username, oldPassword, newPassword)
+        res.send(result);
+    }
+
+})
+
+router.post('/changedisplay', async (req, res) => {
+    username = req.session.username;
+    newDisplay = req.body.displayname;
+    if(req.session.username && req.session.loggedin){
+        result = await db.changeDisplay(username, newDisplay)
+        res.send(result);
+    }
+
+})
+
+router.post('/deletecurrentuser', async (req, res) => {
+    // We should lock this up more...
+    // CSRF?
+    username = req.session.username;
+    if(req.session.username && req.session.loggedin){
+        result = await db.deleteUser(username)
+        res.send(result);
+    }
+
+})
+
 router.get('/profile', async (req, res) => {
     if(req.session && req.session.loggedin && req.session.username){
         result = await db.getProfile(req.session.username);

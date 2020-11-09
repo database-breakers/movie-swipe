@@ -5,8 +5,9 @@ const app = express();
 require('dotenv').config()
 const db = require("./db");
 
-var movies = require('./routes/movies.js')
-var user = require('./routes/user.js')
+var moviesRoute = require('./routes/movies.js')
+var userRoute = require('./routes/user.js')
+var groupRoute = require('./routes/group.js')
 
 const port = process.env.PORT;
 const sessionSecret = process.env.SESSIONSECRET;
@@ -23,8 +24,9 @@ app.get('/', (req,res) => {
 	res.send("Hello world!");
 })
 
-app.use('/api/movies', movies);
-app.use('/api/user', user);
+app.use('/api/movies/v1/', moviesRoute);
+app.use('/api/user/v1/', userRoute);
+app.use('/api/group/v1/', groupRoute);
 
 app.listen(port, ()=>{
 	console.log(`Listening on ${port}`);

@@ -161,6 +161,60 @@ async function signIn(username, password, request){
     )
 }
 
+
+// TODO: Prolly should be authenticated, will simplify code a ton.
+async function changePassword(username, oldPassword, newPassword){
+    return new Promise (data =>
+        db.query("SELECT * FROM User WHERE username = ?", username, (err, result, fields) => {
+            if (result.length > 0){
+                // Check password
+                bcrypt.compare(oldPassword, result[0].pw_hash, (err, check) => {
+                    if(check){
+                        // Set new password.
+                        bcrypt.hash(newPassword, saltRounds, (err, hash) => {
+                            db.query("UPDATE User SET pw_hash = ?, pw_salt = 0 WHERE username = ?", [hash, username], (err, result, fields)=>{
+                                data(result);
+                            })
+                        })
+                    }
+                    else{
+                        // Return invalid user/pass.
+                        data( {"error": "Invalid old password."} )
+                    }
+
+                })
+            }
+            else{
+                // Username does not exist, return invalid user/pass.
+                data( {"error": "Invalid username/password."} )
+            }
+        })
+    )
+}
+
+async function changeDisplay(username, newDisplay){
+    return new Promise (data =>
+        db.query("UPDATE User SET display_name = ? WHERE username = ?", [newDisplay, username], (err, result, fields) => {
+            if (err) data({"error": "Could not set display name."});
+            data( {"success": "Set display name."} );
+        })    
+    )
+}
+
+async function deleteUser(username){
+    return new Promise (data =>
+        // Clean up user table.
+        db.query("DELETE FROM User WHERE username = ?", username, (err, result, fields) => {
+            if (err) data({"error": "Could not delete user from users."});
+            // Clean up belong table.
+            db.query("DELETE FROM belong WHERE username = ?", username, (err, result, fields) => {
+                if (err) data({"error": "Could not delete user from groups."});
+                data( {"success": "Completely deleted user."} );
+            })
+        })    
+    )
+}
+
 async function getProfile(username){
     return new Promise (data =>
         db.query("SELECT username, display_name FROM User WHERE username = ?", username, (err, result, fields) => {
@@ -173,6 +227,23 @@ async function getProfile(username){
         })
     )
 }
+
+async function getGroups(username){
+    return new Promise (data =>
+        db.query("SELECT u.group_id, u.group_name FROM UserGroup AS u NATURAL JOIN (SELECT * FROM belong WHERE username = ? ) AS b",
+        username, (err, result, fields) =>{
+            data(result);
+        })    
+    )
+}
+
+/*
+async function getMembers(username){
+    return new Promise (data =>
+        db.query()    
+    )
+}
+*/
 
 testUsernames = [ "alice", "bob", "charlie", "devin", "evan", "frank", "gertrude", "hank", "irene", "jason", "kevin",
 	"liz", "matt", "nate", "oscar", "peter", "quincy", "rickey", "steven", "tom"]
@@ -194,5 +265,9 @@ module.exports = {
     createUser,
     generateTestUsers,
     signIn,
-    getProfile
+    changePassword,
+    changeDisplay,
+    deleteUser,
+    getProfile,
+    getGroups
 };
