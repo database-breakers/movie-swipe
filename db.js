@@ -237,6 +237,15 @@ async function getGroups(username){
     )
 }
 
+async function getGroups(username){
+    return new Promise (data =>
+        db.query("SELECT u.group_id, u.group_name FROM UserGroup AS u NATURAL JOIN (SELECT * FROM belong WHERE username = ? ) AS b",
+        username, (err, result, fields) =>{
+            data(result);
+        })    
+    )
+}
+
 /*
 async function getMembers(username){
     return new Promise (data =>
@@ -269,5 +278,6 @@ module.exports = {
     changeDisplay,
     deleteUser,
     getProfile,
-    getGroups
+    getGroups,
+    getMembers
 };

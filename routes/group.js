@@ -15,4 +15,10 @@ router.get('/', async (req, res) => {
     res.send(result);
 })
 
+
+router.get('/:id', async (req, res) => {
+    result = await db.getGroupMembers(req.params.id);
+    res.send(result);
+})
+
 module.exports = router;
