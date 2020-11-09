@@ -26,8 +26,31 @@ router.post('/signin', async (req, res) => {
 router.post('/signout', async (req, res) => {
     req.session.destroy( (err) =>{
         if (err) res.send( {"error": "Could not sign out."} );
-        else res.send( {"success": true} );
+        else{
+            req.session = null;
+            res.send( {"success": true} );
+        }
     });  
+})
+
+router.get('/profile', async (req, res) => {
+    if(req.session && req.session.loggedin && req.session.username){
+        result = await db.getProfile(req.session.username);
+        res.send(result);
+    }
+    else{
+        res.send({"error": "Sign in to access profile."})
+    }  
+})
+
+router.get('/profile/:username', async (req, res) => {
+    if(req.session && req.session.loggedin && req.session.username){
+        result = await db.getProfile(req.params.username);
+        res.send(result);
+    }
+    else{
+        res.send({"error": "Sign in to access profile."})
+    }  
 })
 
 /**

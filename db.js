@@ -161,6 +161,19 @@ async function signIn(username, password, request){
     )
 }
 
+async function getProfile(username){
+    return new Promise (data =>
+        db.query("SELECT username, display_name FROM User WHERE username = ?", username, (err, result, fields) => {
+            if(result.length > 0){
+                data(result[0])
+            }
+            else{
+                data({"error": "Username not found."})
+            }
+        })
+    )
+}
+
 testUsernames = [ "alice", "bob", "charlie", "devin", "evan", "frank", "gertrude", "hank", "irene", "jason", "kevin",
 	"liz", "matt", "nate", "oscar", "peter", "quincy", "rickey", "steven", "tom"]
 
@@ -180,5 +193,6 @@ module.exports = {
     getWriter,
     createUser,
     generateTestUsers,
-    signIn
+    signIn,
+    getProfile
 };
