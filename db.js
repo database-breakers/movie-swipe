@@ -278,6 +278,6 @@ module.exports = {
     changeDisplay,
     deleteUser,
     getProfile,
-    getGroups,
-    getMembers
+    getGroups
+    //getMembers
 };
