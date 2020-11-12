@@ -6,7 +6,7 @@
 Installing Node on the local machine should be enough to get rolling.
 
 ## Run the Application
-1. Grab the `.env` file for the DB IP and password for the API user and place in root.
+1. Grab the `.env` file for the DB IP and password for the API user and place in root of project.
     - This file should never, ***never*** be committed to the repo.
 2. Launch the API by running `startExpressServer.sh`.
     - Provide any argument, e.g. `./startExpressServer.sh 1`, to install necessary packages on first run.
