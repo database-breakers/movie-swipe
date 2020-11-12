@@ -20,9 +20,7 @@ app.use(session({
 	saveUninitialized: true
 }));
 
-app.get('/', (req,res) => {
-	res.send("Hello world!");
-})
+app.use(express.static(path.join(__dirname, 'client/build')));
 
 app.use('/api/movies/v1/', moviesRoute);
 app.use('/api/user/v1/', userRoute);

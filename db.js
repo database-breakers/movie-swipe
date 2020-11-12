@@ -246,13 +246,31 @@ async function getGroups(username){
     )
 }
 
-/*
-async function getMembers(username){
+async function getMembers(groupID){
     return new Promise (data =>
-        db.query()    
+        db.query("SELECT username FROM belong WHERE group_id = ?", groupID, (err, result, fields) => {
+            data(result);
+        })    
     )
 }
-*/
+
+async function getGroupName(groupID){
+    return new Promise (data =>
+        db.query("SELECT group_name FROM UserGroup WHERE group_id = ?", groupID, (err, result, fields) => {
+            data(result);
+        })    
+    )
+}
+
+async function getPolls(groupID){
+    return new Promise (data =>
+        db.query("SELECT poll_id, poll_name FROM Poll WHERE group_id = ?", groupID, (err, result, fields) => {
+            data(result);
+        })    
+    )
+}
+
+
 
 testUsernames = [ "alice", "bob", "charlie", "devin", "evan", "frank", "gertrude", "hank", "irene", "jason", "kevin",
 	"liz", "matt", "nate", "oscar", "peter", "quincy", "rickey", "steven", "tom"]
@@ -278,6 +296,8 @@ module.exports = {
     changeDisplay,
     deleteUser,
     getProfile,
-    getGroups
-    //getMembers
+    getGroups,
+    getGroupName,
+    getMembers,
+    getPolls
 };
