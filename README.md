@@ -8,10 +8,10 @@ Installing Node on the local machine should be enough to get rolling.
 ## Run the Application
 1. Grab the `.env` file for the DB IP and password for the API user and place in root.
     - This file should never, ***never*** be committed to the repo.
-2. To launch the API, run `startExpressServer.sh`.
+2. Launch the API by running `startExpressServer.sh`.
     - Provide any argument, e.g. `./startExpressServer.sh 1`, to install necessary packages on first run.
         - This is Linux/Mac only. You can just run `cd client && npm install && node app` on Windows.
-3. To launch the client frontend development server, run `startReactServer.sh`.
+3. Launch the client frontend development server by running `startReactServer.sh`, ideally in a separate terminal window.
     - Provide any argument, e.g. `./startReactServer.sh 1`, to install necessary packages on first run.
         - This is Linux/Mac only. You can just run `cd client && npm install && npm start` on Windows.
 4. Load http://localhost:5000 to check out the app.
