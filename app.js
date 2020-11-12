@@ -18,7 +18,8 @@ app.use(bodyParser.json());
 app.use(session({
 	secret: sessionSecret,
 	resave: true,
-	saveUninitialized: true
+	saveUninitialized: true,
+	cookie: { sameSite: 'strict' },
 }));
 
 app.use(express.static(path.join(__dirname, 'client/build')));
