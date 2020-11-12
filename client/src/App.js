@@ -1,7 +1,20 @@
 import logo from './logo.svg';
 import './App.css';
 
+function getMovieFromAPI() {
+  return fetch('/api/movies/v1/tt0120737')
+  .then((response) => response.json())
+  .then((responseJson) => {
+    console.log(responseJson);
+    return responseJson;
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+}
+
 function App() {
+  getMovieFromAPI();
   return (
     <div className="App">
       <header className="App-header">
