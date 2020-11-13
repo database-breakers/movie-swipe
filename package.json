@@ -1,6 +1,9 @@
 {
   "name": "movie-swipe",
   "version": "1.0.0",
+  "engines": {
+    "yarn": "1.x"
+  },
   "description": "Tinder for your group movie nights.",
   "main": "app.js",
   "scripts": {
