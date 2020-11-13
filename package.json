@@ -4,6 +4,7 @@
   "engines": {
     "node": "15.x"
   },
+  "cacheDirectories": ["client/node_modules", "node_modules"],
   "description": "Tinder for your group movie nights.",
   "main": "app.js",
   "scripts": {
