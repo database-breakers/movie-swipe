@@ -22,7 +22,7 @@ app.use(session({
 	cookie: { sameSite: 'strict' },
 }));
 
-app.use(express.static(path.join(__dirname, 'client/build')));
+app.use(express.static(path.join(__dirname, 'client/web-build')));
 
 app.use('/api/movies/v1/', moviesRoute);
 app.use('/api/user/v1/', userRoute);
