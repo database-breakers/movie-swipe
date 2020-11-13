@@ -5,6 +5,7 @@ const path = require('path');
 const app = express();
 require('dotenv').config()
 const db = require("./db");
+const cors = require('cors');
 
 var moviesRoute = require('./routes/movies.js')
 var userRoute = require('./routes/user.js')
@@ -21,6 +22,21 @@ app.use(session({
 	saveUninitialized: true,
 	cookie: { sameSite: 'strict' },
 }));
+
+var whitelist = ['http://localhost:19006']
+var corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  }
+}
+
+if(process.env.NODE_ENV !== "production"){
+	app.use(cors(corsOptions));
+}
 
 app.use(express.static(path.join(__dirname, 'client/web-build')));
 

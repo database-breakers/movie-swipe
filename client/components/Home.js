@@ -1,12 +1,14 @@
 import React, {Component} from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import "../config"
+import BaseUrl from '../config';
 
 export default class HomeScreen extends Component {
     componentDidMount() {
-        const apiUrl = '/api/group/v1/';
+        const apiUrl = BaseUrl()+'/api/movies/v1/tt0120737';
         fetch(apiUrl)
-            .then((response) => response.text())
-            .then((data) => console.log('This is your data', data));
+            .then((response) => response.json())
+            .then((data) => console.log(data));
     }
 
     render() {

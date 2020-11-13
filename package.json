@@ -4,7 +4,10 @@
   "engines": {
     "node": "15.x"
   },
-  "cacheDirectories": ["client/node_modules", "node_modules"],
+  "cacheDirectories": [
+    "client/node_modules",
+    "node_modules"
+  ],
   "description": "Tinder for your group movie nights.",
   "main": "app.js",
   "scripts": {
@@ -24,6 +27,7 @@
   "dependencies": {
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "expo": "^39.0.4",
     "express": "^4.17.1",
