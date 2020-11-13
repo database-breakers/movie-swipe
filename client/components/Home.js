@@ -3,12 +3,9 @@ import { StyleSheet, Text, View } from 'react-native';
 
 export default class HomeScreen extends Component {
     componentDidMount() {
-        const apiUrl = '/api/movies/v1/tt0120737?full=1';
+        const apiUrl = '/api/group/v1/';
         fetch(apiUrl)
-            .then((response) => {
-                console.log(response);
-                response.json()
-            } )
+            .then((response) => response.text())
             .then((data) => console.log('This is your data', data));
     }
 
