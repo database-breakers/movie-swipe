@@ -143,7 +143,10 @@ async function signIn(username, password, request){
                         request.session.username = username;
                         data({
                             "success": true,
-                            "redirect": "/home"
+                            "profile": {
+                                "username": result[0].username,
+                                "display_name": result[0].display_name,
+                            }
                         })
                     }
                     else{
