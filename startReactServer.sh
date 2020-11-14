@@ -3,4 +3,4 @@ cd client
 if [ -n "$1" ]; then
     npm install
 fi
-npm start
+expo web

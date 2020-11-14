@@ -3,7 +3,9 @@
 ### Made for CS4750 Fall 2020.
 -----
 ## Prerequisites
-Installing Node on the local machine should be enough to get rolling.
+After installing Node on the local machine as described for your OS, install Expo CLI with the following command:
+```npm install -g expo-cli```
+After that, the below commands should be executable.
 
 ## Run the Application
 1. Grab the `.env` file for the DB IP and password for the API user and place in root of project.
