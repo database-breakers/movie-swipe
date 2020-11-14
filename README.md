@@ -3,7 +3,11 @@
 ### Made for CS4750 Fall 2020.
 -----
 ## Prerequisites
-Installing Node on the local machine should be enough to get rolling.
+After installing Node on the local machine as described for your OS, install Expo CLI with the following command:
+
+```npm install -g expo-cli```
+
+After that, the below commands should be executable.
 
 ## Run the Application
 1. Grab the `.env` file for the DB IP and password for the API user and place in root of project.
@@ -14,7 +18,7 @@ Installing Node on the local machine should be enough to get rolling.
 3. Launch the client frontend development server by running `startReactServer.sh`, ideally in a separate terminal window.
     - Provide any argument, e.g. `./startReactServer.sh 1`, to install necessary packages on first run.
         - This is Linux/Mac only. You can just run `cd client && npm install && npm start` on Windows.
-4. Load http://localhost:5000 to check out the app.
+4. Let Expo take you to the website to begin developing.
 
 ## Example `.env`
 A valid `.env` file for this app would look like the following:

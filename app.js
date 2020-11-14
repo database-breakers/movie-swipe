@@ -20,23 +20,26 @@ app.use(session({
 	secret: sessionSecret,
 	resave: true,
 	saveUninitialized: true,
-	cookie: { sameSite: 'strict' },
+  cookie: { sameSite: 'strict' },
 }));
 
-var whitelist = ['http://localhost:19006']
+var whitelist = ['http://localhost:19006', undefined, "http://localhost:5000"]
 var corsOptions = {
   origin: function (origin, callback) {
+    console.log("Request from:", origin);
     if (whitelist.indexOf(origin) !== -1) {
       callback(null, true)
     } else {
       callback(new Error('Not allowed by CORS'))
     }
-  }
+  },
+  credentials: true,
 }
 
 if(process.env.NODE_ENV !== "production"){
 	app.use(cors(corsOptions));
 }
+
 
 app.use(express.static(path.join(__dirname, 'client/web-build')));
 
