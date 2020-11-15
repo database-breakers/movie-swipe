@@ -85,6 +85,25 @@ export default class HomeScreen extends Component {
             });
     }
 
+    signOut(){
+        let login = {
+            method: 'POST',
+            headers: {
+                'Accept':       'application/json',
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include'
+        }
+        const apiUrl = BaseUrl()+'/api/user/v1/signout';
+        fetch(apiUrl, login)
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success){
+                    this.setState({loggedIn: false, password: '', username: ''})
+                }
+            });
+    }
+
     componentDidMount() {
         this.checkLoginStatus();
         const apiUrl = BaseUrl()+'/api/movies/v1/tt0120737';
@@ -99,12 +118,14 @@ export default class HomeScreen extends Component {
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                     <Text>Welcome back, {this.state.profile.display_name}!</Text>
                     <MovieDetail id={"tt0120737"} />
+                    <Button mode="contained" onPress={() => this.signOut()}> Sign out
+                    </Button>
                 </View>
             )
         }
         else{
             return (
-                <View>
+                <View style={{flex: 1, justifyContent: 'Center', alignItems: 'center'}}>
                     <TextInput 
                     mode="flat"
                     style={styles.inputContainerStyle}
@@ -120,9 +141,7 @@ export default class HomeScreen extends Component {
                         value={this.state.password}
                         onChangeText={(password) => this.setState({password})}
                     />
-                      <Button mode="contained" onPress={() => this.signIn}>
-    Log In
-  </Button>
+                      <Button mode="contained" onPress={() => this.signIn()}>Log In</Button>
                 </View>
             );
         }

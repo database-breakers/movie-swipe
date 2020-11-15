@@ -71,7 +71,7 @@ router.get('/profile', async (req, res) => {
         res.send(result);
     }
     else{
-        res.send({"error": "Sign in to access profile."})
+        res.send({"error": "Sign in to access profile"})
     }  
 })
 
@@ -81,7 +81,7 @@ router.get('/profile/:username', async (req, res) => {
         res.send(result);
     }
     else{
-        res.send({"error": "Sign in to access profile."})
+        res.send({"error": "Sign in to access profile"})
     }  
 })
 
