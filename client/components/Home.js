@@ -1,8 +1,34 @@
 import React, {Component} from 'react';
-import { StyleSheet, Text, View, TextInput } from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import BaseUrl from '../config';
-import { ThemeProvider, Button } from 'react-native-elements';
 import MovieDetail from './MovieDetail'
+import {Button, TextInput, Text} from 'react-native-paper';
+
+const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      padding: 8,
+    },
+    helpersWrapper: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    wrapper: {
+      flex: 1,
+    },
+    helper: {
+      flexShrink: 1,
+    },
+    counterHelper: {
+      textAlign: 'right',
+    },
+    fontSize: {
+      fontSize: 24,
+    },
+    textArea: {
+      height: 80,
+    },
+  });
 export default class HomeScreen extends Component {
     constructor(props){
         super(props);
@@ -78,25 +104,24 @@ export default class HomeScreen extends Component {
         }
         else{
             return (
-                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                <View>
                     <TextInput 
-                        placeholder="Username"
-                        value={this.state.username}
+                    mode="flat"
+                    style={styles.inputContainerStyle}
+                    label="Username"
+                    value={this.state.username}
                         onChangeText={(username) => this.setState({username})}
                     />
-                    <TextInput placeholder="Password"
-                        secureTextEntry
+                    <TextInput
+                        mode="flat"
+                        style={styles.inputContainerStyle}
+                        label="Password"
                         value={this.state.password}
                         onChangeText={(password) => this.setState({password})}
                     />
-                    <Button
-                        onPress={() => this.signIn()}
-                        title="Log In"
-                        type= "outline"
-                        
-                        color="#841584"
-                        accessibilityLabel="Log In to the app"
-                    />
+                      <Button mode="contained" onPress={() => this.signIn}>
+    Log In
+  </Button>
                 </View>
             );
         }
