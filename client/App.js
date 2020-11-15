@@ -39,9 +39,10 @@ export default function App() {
     <PaperProvider theme={theme}>
     <NavigationContainer>{
       <Stack.Navigator>
-        <Stack.Screen name="Home" component={SignUp} />
+        <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Poll List" component={PollList} />
         <Stack.Screen name="Poll" component={Poll} />
+        <Stack.Screen name="SignUp" component={SignUp}/>
       </Stack.Navigator>
     }</NavigationContainer>
   </PaperProvider>
