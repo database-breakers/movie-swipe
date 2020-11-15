@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
-import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
+import { StyleSheet, Text, View, TextInput } from 'react-native';
 import BaseUrl from '../config';
-
+import { ThemeProvider, Button } from 'react-native-elements';
+import MovieDetail from './MovieDetail'
 export default class HomeScreen extends Component {
     constructor(props){
         super(props);
@@ -91,9 +92,12 @@ export default class HomeScreen extends Component {
                     <Button
                         onPress={() => this.signIn()}
                         title="Log In"
+                        type= "outline"
+                        
                         color="#841584"
                         accessibilityLabel="Log In to the app"
                     />
+                    <MovieDetail id={"tt0120737"} />
                 </View>
             );
         }
