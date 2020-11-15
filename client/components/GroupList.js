@@ -26,12 +26,19 @@ const styles = StyleSheet.create({
         marginTop: StatusBar.currentHeight || "0",
     },
     item: {
-        padding: 20,
+        padding: 10,
         marginVertical: 8,
-        marginHorizontal: 16,
+        marginHorizontal: 8,
+        borderRadius: 10,
+        paddingLeft: 10,
+        paddingRight: 10,
+        paddingTop: 5,
+        paddingBottom: 10,
+        backgroundColor: "lightgrey",
     },
     title: {
-        fontSize: 32,
+        fontSize: 16,
+        color: "darkblue",
     },
 });
 
@@ -40,8 +47,6 @@ export default class GroupList extends Component {
         super(props);
     };
     renderItem = ({ item }) => {
-
-        console.log(item)
         return (
             <Item
                 item={item}
@@ -52,6 +57,7 @@ export default class GroupList extends Component {
     render() {
         return (
             <SafeAreaView style={styles.container}>
+                <Text>Here are your groups! Click on one to see the polls for that group.</Text>
                 <FlatList
                     data={this.props.groups}
                     renderItem={this.renderItem}
