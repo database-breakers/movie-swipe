@@ -72,8 +72,8 @@ export default class HomeScreen extends Component {
             return (
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                     <Text>Welcome back, {this.state.profile.display_name}!</Text>
+                    <MovieDetail id={"tt0120737"} />
                 </View>
-                
             )
         }
         else{
@@ -97,7 +97,6 @@ export default class HomeScreen extends Component {
                         color="#841584"
                         accessibilityLabel="Log In to the app"
                     />
-                    <MovieDetail id={"tt0120737"} />
                 </View>
             );
         }
