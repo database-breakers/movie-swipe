@@ -2,8 +2,8 @@ import React, {Component} from 'react';
 import {View, StyleSheet} from 'react-native';
 import BaseUrl from '../config';
 import MovieDetail from './MovieDetail'
+import HomeHeader from './HomeHeader'
 import {Button, TextInput, Text} from 'react-native-paper';
-
 const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -125,6 +125,8 @@ export default class HomeScreen extends Component {
         }
         else{
             return (
+                <View><HomeHeader/>
+                
                 <View style={{flex: 1, justifyContent: 'Center', alignItems: 'center'}}>
                     <TextInput 
                     mode="flat"
@@ -141,7 +143,12 @@ export default class HomeScreen extends Component {
                         value={this.state.password}
                         onChangeText={(password) => this.setState({password})}
                     />
-                      <Button mode="contained" onPress={() => this.signIn()}>Log In</Button>
+                      <Button 
+                      mode="contained" 
+                      onPress={() => this.signIn()}
+                      >
+                          Log In</Button>
+                </View>
                 </View>
             );
         }
