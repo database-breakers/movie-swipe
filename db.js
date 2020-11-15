@@ -319,6 +319,83 @@ async function removeFromGroup(username, group_id) {
     )
 }
 
+async function createPoll(poll_name, group_id) {
+    return new Promise (data =>
+        db.query("INSERT INTO Poll (poll_name, group_id) VALUES (?, ?);", [poll_name, group_id], (err, result, fields) => {
+            if (err) data({"error": "Could not create poll."});
+            data( {"success": "Created poll."} );
+        })    
+    )
+}
+
+async function getPollMovies(poll_id) {
+    return new Promise (data =>
+        db.query("SELECT imdb_id FROM Choice WHERE poll_id = ?;", poll_id, (err, result, fields) => {
+            result = result.map(r => r.imdb_id);
+            data(result);
+        })    
+    )
+}
+
+async function getPollResults(poll_id) {
+    return new Promise (data =>
+        db.query("SELECT imdb_id, yes AS Likes, (total-yes) AS Dislikes, CONCAT(FORMAT(IF(total=0,0,yes*100.0/total), 2), '%') AS Percentage FROM (\
+            (SELECT imdb_id, COUNT(*) AS yes FROM vote WHERE response = 1 AND poll_id = ? GROUP BY imdb_id) t1 NATURAL JOIN \
+            (SELECT imdb_id, COUNT(*) AS total FROM vote WHERE poll_id = ? GROUP BY imdb_id) t2) ORDER BY Likes DESC;",
+            [poll_id, poll_id], (err, result, fields) => {
+            data(result);
+        })    
+    )
+}
+
+async function emptyPollVotes(poll_id) {
+    return new Promise (data =>
+        db.query("DELETE FROM vote WHERE poll_id = ?;", poll_id, (err, result, fields) => {
+            if (err) data({"error": "Could not empty poll votes."});
+            data( {"success": `Emptied votes from poll ${poll_id}.`} );
+        })    
+    )
+}
+
+async function emptyPollChoices(poll_id) {
+    return new Promise (data =>
+        db.query("DELETE FROM Choice WHERE poll_id = ?;", poll_id, (err, result, fields) => {
+            if (err) data({"error": "Could not empty poll choices."});
+            data( {"success": `Emptied choices from poll ${poll_id}.`} );
+        })    
+    )
+}
+
+async function deletePoll(poll_id) {
+    return new Promise (data =>
+        db.query("DELETE FROM Poll WHERE poll_id = ?;", poll_id, (err, result, fields) => {
+            if (err) data({"error": "Could not delete poll."});
+            data( {"success": `Deleted poll ${poll_id}.`} );
+        })    
+    )
+}
+
+async function vote(username, poll_id, imdb_id, response) {
+    return new Promise (data =>
+        db.query("INSERT INTO vote VALUES (?, ?, ?, ?);", [username, poll_id, imdb_id, response], (err, result, fields) => {
+            if (err) data({"error": "Your vote was not counted. The election has been corrupted."});
+            data( {"success": `You voted ${response} on movie ${imdb_id}.`} );
+        })    
+    )
+}
+
+async function populatePoll(poll_id, numMovies, minYear, maxYear, minRuntime, maxRuntime,
+        ratingTomato, ratingMeta, ratingIMDB, ratingParent, director, writer, actor, genre) {
+    return new Promise (data =>
+        db.query("CALL populate_poll(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
+            [poll_id, numMovies, minYear, maxYear, minRuntime, maxRuntime,
+            ratingTomato, ratingMeta, ratingIMDB, ratingParent, director, writer, actor, genre], (err, result, fields) => {
+            if (err) data({"error": "Could not populate poll."});
+            data( {"success": `Populated poll ${poll_id}.`} );
+        })    
+    )
+}
+
 testUsernames = [ "alice", "bob", "charlie", "devin", "evan", "frank", "gertrude", "hank", "irene", "jason", "kevin",
 	"liz", "matt", "nate", "oscar", "peter", "quincy", "rickey", "steven", "tom"]
 
@@ -352,5 +429,13 @@ module.exports = {
     addToGroup,
     emptyGroup,
     deleteGroup,
-    removeFromGroup
+    removeFromGroup,
+    createPoll,
+    getPollMovies,
+    getPollResults,
+    emptyPollVotes,
+    emptyPollChoices,
+    deletePoll,
+    vote,
+    populatePoll
 };
