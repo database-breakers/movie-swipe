@@ -23,8 +23,7 @@ const theme = {
       backdrop: '#1BB55C',
     },
     fonts: {
-      regular: 'Helvetica Neue',
-      medium: 'Helvetica Neue Light',
+
     },
     animation: {
       scale: 1.0,
@@ -33,7 +32,7 @@ const theme = {
 
 export default function App() {
   return (
-    <PaperProvider theme = {theme}>
+    <PaperProvider theme={theme}>
     <NavigationContainer>{
       <Stack.Navigator>
         <Stack.Screen name="Home" component={HomeScreen} />

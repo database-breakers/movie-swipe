@@ -115,6 +115,7 @@ export default class HomeScreen extends Component {
                     <TextInput
                         mode="flat"
                         style={styles.inputContainerStyle}
+                        secureTextEntry
                         label="Password"
                         value={this.state.password}
                         onChangeText={(password) => this.setState({password})}
