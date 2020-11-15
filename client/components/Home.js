@@ -150,13 +150,12 @@ export default class HomeScreen extends Component {
                     />
                     <Button mode="contained" onPress={() => this.signOut()}> Sign out
                     </Button>
-                    <MovieDetail id={"tt0120737"} />
                 </View>
             )
         }
         else{
             return (
-                <View style={{flex: 1, justifyContent: 'Center', alignItems: 'center'}}>
+                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                     <TextInput 
                     mode="flat"
                     style={styles.inputContainerStyle}
