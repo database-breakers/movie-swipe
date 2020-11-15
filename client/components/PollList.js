@@ -111,7 +111,6 @@ export default class PollList extends Component {
                 item={item}
                 onPress={() => this.props.navigation.navigate('Poll', {
                     poll_id: item.poll_id,
-                    navigation: this.props.navigation,
                     profile: this.props.route.params.profile
                 })}
             />
@@ -130,27 +129,33 @@ export default class PollList extends Component {
             <SafeAreaView style={styles.container}>
                 <Text>Here are your groups! Click on one to see the polls for that group.</Text>
                 <TouchableOpacity 
-                    onPress={() => console.log("new poll!")}
+                    onPress={() => this.props.navigation.navigate('New Poll', {
+                            group_id: this.props.route.params.group_id
+                        })}
                     style={[styles.add_item]}>
-                    <Text style={[styles.add_title]}>New group</Text>
+                    <Text style={[styles.add_title]}>New Poll</Text>
                 </TouchableOpacity>
+                { (this.state.polls != undefined && this.state.polls.length > 0) ? 
                 <FlatList
                     data={this.state.polls}
                     renderItem={this.renderPoll}
                     keyExtractor={(item) => String(item.poll_id)}
-                />
+                /> : <View/>
+                }
                 <Text>Group members</Text>
                 <TouchableOpacity 
                     onPress={() => console.log("new poll!")}
                     style={[styles.add_item]}>
                     <Text style={[styles.add_title]}>New group</Text>
                 </TouchableOpacity>
+                { (this.state.members != undefined && this.state.members.length > 0) ?
                 <FlatList
                     data={this.state.members}
                     renderItem={this.renderMember}
                     keyExtractor={(item) => String(item)}
                     horizontal={true}
-                />
+                /> : <View/>
+                }
             </SafeAreaView>
         );
     }

@@ -84,11 +84,13 @@ export default class GroupList extends Component {
                     style={[styles.add_item]}>
                     <Text style={[styles.add_title]}>New group</Text>
                 </TouchableOpacity>
-                <FlatList
-                    data={this.props.groups}
-                    renderItem={this.renderItem}
-                    keyExtractor={(item) => String(item.group_id)}
-                />
+                { (this.props.groups != undefined && this.props.groups.length > 0) ? 
+                    <FlatList
+                        data={this.props.groups}
+                        renderItem={this.renderItem}
+                        keyExtractor={(item) => String(item.group_id)}
+                    /> : 
+                    <View/>}
             </SafeAreaView>
         );
     }

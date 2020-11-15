@@ -149,7 +149,6 @@ export default class HomeScreen extends Component {
             {" "}
             Sign out
           </Button>
-          <MovieDetail id={"tt0120737"} />
         </View>
       );
     } else {
