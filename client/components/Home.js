@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
 import BaseUrl from '../config';
+import GroupList from './GroupList';
 
 export default class HomeScreen extends Component {
     constructor(props){
@@ -11,6 +12,7 @@ export default class HomeScreen extends Component {
             profile: {},
             username: "",
             password: "",
+            groups: {},
         };
     }
 
@@ -27,8 +29,29 @@ export default class HomeScreen extends Component {
                 else{
                     // Logged in.
                     this.setState({loggedIn: true, profile: {...data}})
+                    this.getGroups();
                 }
             })
+    }
+
+    getGroups() {
+        if (this.state.loggedIn) {
+            const apiUrl = BaseUrl()+'/api/group/v1/'
+            fetch(apiUrl, {credentials: "include"})
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.error){
+                        // Couldn't fetch groups.
+                        return
+                    }
+                    else{
+                        // Logged in.
+                        console.log(data);
+                        this.setState({groups: data})
+                    }
+                })
+        }
+        return
     }
 
     signIn(username, password){
@@ -51,6 +74,7 @@ export default class HomeScreen extends Component {
                 console.log("Signed in?", data)
                 if (data.success){
                     this.setState({loggedIn: true, profile: data.profile})
+                    this.getGroups();
                 }
                 else{
                     this.setState({loggedIn: false})
@@ -71,8 +95,10 @@ export default class HomeScreen extends Component {
             return (
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                     <Text>Welcome back, {this.state.profile.display_name}!</Text>
+                    <GroupList
+                        groups={this.state.groups}
+                    />
                 </View>
-                
             )
         }
         else{
