@@ -88,15 +88,24 @@ export default class Poll extends Component {
         console.log(poll_id + " was pressed");
     }
     renderMovie = ( item ) => {
-        return (
-            <MovieDetail
-                id={item}
-            />
-        );
+        if (this.state.movies != {}) {
+            return (
+                <MovieDetail
+                    id={item}
+                />
+            );
+        } else {
+            return (
+                <View></View>
+            );
+        }
     };
     render() {
+        console.log(this.state.movies)
+        console.log("length: " + this.state.movies.length)
         return (
             <SafeAreaView style={styles.container}>
+            { (this.state.movies.length != undefined) ? 
                 <Swiper
                     cards={this.state.movies}
                     renderCard={this.renderMovie}
@@ -105,6 +114,7 @@ export default class Poll extends Component {
                     disableBottomSwipe={true}
                 >
                 </Swiper>
+                : <View></View> }
             </SafeAreaView>
         );
     }
