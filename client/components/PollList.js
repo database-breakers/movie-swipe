@@ -98,9 +98,29 @@ export default class PollList extends Component {
                 else {
                     // Logged in.
                     console.log(data);
-                    this.setState({ members: data })
+                    // this.setState({ members: data })
+                    this.getDisplayNames(data);
                 }
             })
+    }
+    getDisplayNames(members) {
+        for (const member of members) {
+            const apiNamesUrl = BaseUrl() + '/api/user/v1/profile/' + member;
+            var display_names = [];
+            fetch(apiNamesUrl, { credentials: "include" })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.error) {
+                        // Couldn't fetch groups.
+                        return;
+                    }
+                    else {
+                        // Logged in.
+                        display_names.push(data);
+                        this.setState({members: display_names});
+                    }
+                })
+        }
     }
     groupOnClick(poll_id) {
         console.log(poll_id + " was pressed");
@@ -119,7 +139,7 @@ export default class PollList extends Component {
     renderMember = ({ item }) => {
         return (
             <MemberItem
-                item={item}
+                item={item.display_name}
             />
         );
     };
@@ -152,8 +172,8 @@ export default class PollList extends Component {
                 <FlatList
                     data={this.state.members}
                     renderItem={this.renderMember}
-                    keyExtractor={(item) => String(item)}
-                    horizontal={true}
+                    keyExtractor={(item) => String(item.username)}
+                    horizontal={false}
                 /> : <View/>
                 }
             </SafeAreaView>
