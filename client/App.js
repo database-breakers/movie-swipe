@@ -6,6 +6,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from './components/Home'
 import {Provider as PaperProvider} from "react-native-paper";
+import PollList from './components/PollList'
+import Poll from './components/Poll'
+
 const Stack = createStackNavigator();
 
 const theme = {
@@ -36,6 +39,8 @@ export default function App() {
     <NavigationContainer>{
       <Stack.Navigator>
         <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Poll List" component={PollList} />
+        <Stack.Screen name="Poll" component={Poll} />
       </Stack.Navigator>
     }</NavigationContainer>
   </PaperProvider>
