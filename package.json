@@ -25,11 +25,11 @@
   },
   "homepage": "https://github.com/database-breakers/movie-swipe#readme",
   "dependencies": {
+    "aws-sdk": "^2.792.0",
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
-    "expo": "^39.0.4",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "mysql": "^2.18.1"

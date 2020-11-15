@@ -10,6 +10,7 @@ const cors = require('cors');
 var moviesRoute = require('./routes/movies.js')
 var userRoute = require('./routes/user.js')
 var groupRoute = require('./routes/group.js')
+var pollRoute = require('./routes/poll.js')
 
 const port = process.env.PORT;
 const sessionSecret = process.env.SESSIONSECRET;
@@ -46,6 +47,7 @@ app.use(express.static(path.join(__dirname, 'client/web-build')));
 app.use('/api/movies/v1/', moviesRoute);
 app.use('/api/user/v1/', userRoute);
 app.use('/api/group/v1/', groupRoute);
+app.use('/api/poll/v1/', pollRoute);
 
 app.listen(port, ()=>{
 	console.log(`Listening on ${port}`);
