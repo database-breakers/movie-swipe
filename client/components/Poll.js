@@ -1,3 +1,4 @@
+
 import React, {
     Component
 } from 'react';
@@ -12,11 +13,12 @@ import {
     TouchableOpacity,
     SafeAreaView
 } from 'react-native';
+import BaseUrl from '../config';
 
-const Item = ({ item, onPress, style }) => (
-    <TouchableOpacity onPress={onPress} style={[styles.item, style]}>
-        <Text style={styles.title}>{item.group_name}</Text>
-    </TouchableOpacity>
+const MemberItem = ({ item, onPress, style }) => (
+    <View>
+        <Text style={styles.title}>{"  " + item}</Text>
+    </View>
 );
 
 const styles = StyleSheet.create({
@@ -58,36 +60,46 @@ const styles = StyleSheet.create({
     },
 });
 
-export default class GroupList extends Component {
+export default class Poll extends Component {
     constructor(props) {
         super(props);
-        console.log(this.props)
-    };
-    renderItem = ({ item }) => {
-        return (
-            <Item
-                item={item}
-                    onPress={() => this.props.navigation.navigate('Poll List', {
-                        group_id: item.group_id,
-                        navigation: this.props.navigation
-                    })
+        this.state = {
+            movies: {},
+        }
+        const apiPollsUrl = BaseUrl() + '/api/poll/v1/' + this.props.route.params.poll_id + "/movies"
+        console.log("attemping to get movies: " + apiPollsUrl)
+        fetch(apiPollsUrl, { credentials: "include" })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.error) {
+                    // Couldn't fetch movies.
+                    return
                 }
+                else {
+                    // Logged in.
+                    console.log(data);
+                    this.setState({ movies: data })
+                }
+            })
+    }
+    groupOnClick(poll_id) {
+        console.log(poll_id + " was pressed");
+    }
+    renderMovie = ({ item }) => {
+        return (
+            <MemberItem
+                item={item}
             />
         );
     };
     render() {
         return (
             <SafeAreaView style={styles.container}>
-                <Text>Here are your groups! Click on one to see the polls for that group.</Text>
-                <TouchableOpacity
-                    onPress={() => console.log("new group!")}
-                    style={[styles.add_item]}>
-                    <Text style={[styles.add_title]}>New group</Text>
-                </TouchableOpacity>
+                <Text>Movies in the poll:</Text>
                 <FlatList
-                    data={this.props.groups}
-                    renderItem={this.renderItem}
-                    keyExtractor={(item) => String(item.group_id)}
+                    data={this.state.movies}
+                    renderItem={this.renderMovie}
+                    keyExtractor={(item) => String(item)}
                 />
             </SafeAreaView>
         );
