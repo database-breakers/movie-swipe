@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React, {Component} from 'react';
-import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import BaseUrl from '../config';
 import GroupList from './GroupList';
