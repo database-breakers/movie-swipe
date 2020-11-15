@@ -179,7 +179,13 @@ export default class HomeScreen extends Component {
                       onPress={() => this.signIn()}
                       >
                           Log In</Button>
+                          <Button 
+                      mode="contained" 
+                      onPress={() => this.props.navigation.navigate('SignUp', {navigation: this.props.navigation})}
+                      >
+                          Sign Up</Button>
                 </View>
+                
                 </View>
             );
         }

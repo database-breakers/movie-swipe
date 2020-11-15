@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Surface, Text } from 'react-native-paper';
 import { StyleSheet } from 'react-native';
 import swipelogo from '../assets/swipelogo.svg'
-const MyComponent = () => (
+const HomeHeader = () => (
   <Surface style={styles.surface}>
     
      <Text style={{ 
@@ -22,7 +22,7 @@ const MyComponent = () => (
   </Surface>
 );
 
-export default MyComponent;
+export default HomeHeader;
 
 const styles = StyleSheet.create({
   surface: {
