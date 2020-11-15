@@ -14,6 +14,8 @@ import {
     SafeAreaView
 } from 'react-native';
 import BaseUrl from '../config';
+import MovieDetail from './MovieDetail'
+import Swiper from 'react-native-deck-swiper'
 
 const MemberItem = ({ item, onPress, style }) => (
     <View>
@@ -85,22 +87,24 @@ export default class Poll extends Component {
     groupOnClick(poll_id) {
         console.log(poll_id + " was pressed");
     }
-    renderMovie = ({ item }) => {
+    renderMovie = ( item ) => {
         return (
-            <MemberItem
-                item={item}
+            <MovieDetail
+                id={item}
             />
         );
     };
     render() {
         return (
             <SafeAreaView style={styles.container}>
-                <Text>Movies in the poll:</Text>
-                <FlatList
-                    data={this.state.movies}
-                    renderItem={this.renderMovie}
-                    keyExtractor={(item) => String(item)}
-                />
+                <Swiper
+                    cards={this.state.movies}
+                    renderCard={this.renderMovie}
+                    backgroundColor="red"
+                    disableTopSwipe={true}
+                    disableBottomSwipe={true}
+                >
+                </Swiper>
             </SafeAreaView>
         );
     }
