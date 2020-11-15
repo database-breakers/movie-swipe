@@ -8,6 +8,7 @@ import HomeScreen from './components/Home'
 import {Provider as PaperProvider} from "react-native-paper";
 import PollList from './components/PollList'
 import Poll from './components/Poll'
+import NewPoll from './components/NewPoll'
 
 const Stack = createStackNavigator();
 
@@ -41,6 +42,7 @@ export default function App() {
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Poll List" component={PollList} />
         <Stack.Screen name="Poll" component={Poll} />
+        <Stack.Screen name="New Poll" component={NewPoll} />
       </Stack.Navigator>
     }</NavigationContainer>
   </PaperProvider>

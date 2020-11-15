@@ -130,9 +130,11 @@ export default class PollList extends Component {
             <SafeAreaView style={styles.container}>
                 <Text>Here are your groups! Click on one to see the polls for that group.</Text>
                 <TouchableOpacity 
-                    onPress={() => console.log("new poll!")}
+                    onPress={() => this.props.navigation.navigate('New Poll', {
+                            group_id: this.props.route.params.group_id
+                        })}
                     style={[styles.add_item]}>
-                    <Text style={[styles.add_title]}>New group</Text>
+                    <Text style={[styles.add_title]}>New Poll</Text>
                 </TouchableOpacity>
                 <FlatList
                     data={this.state.polls}
@@ -140,11 +142,6 @@ export default class PollList extends Component {
                     keyExtractor={(item) => String(item.poll_id)}
                 />
                 <Text>Group members</Text>
-                <TouchableOpacity 
-                    onPress={() => console.log("new poll!")}
-                    style={[styles.add_item]}>
-                    <Text style={[styles.add_title]}>New group</Text>
-                </TouchableOpacity>
                 <FlatList
                     data={this.state.members}
                     renderItem={this.renderMember}

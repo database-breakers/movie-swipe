@@ -1,4 +1,3 @@
-
 import React, {
     Component
 } from 'react';
@@ -114,7 +113,7 @@ export default class Poll extends Component {
             },
             credentials: 'include'
         }
-        const apiUrl = BaseUrl()+'/api/poll/v1/swipe/left';
+        const apiUrl = BaseUrl()+'/api/poll/v1/swipe/right';
         fetch(apiUrl, vote_yes)
             .then((response) => response.json())
             .then((data) => {

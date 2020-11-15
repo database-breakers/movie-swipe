@@ -398,7 +398,10 @@ async function populatePoll(poll_id, numMovies, minYear, maxYear, minRuntime, ma
         db.query("CALL populate_poll(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
             [poll_id, numMovies, minYear, maxYear, minRuntime, maxRuntime,
             ratingTomato, ratingMeta, ratingIMDB, ratingParent, director, writer, actor, genre], (err, result, fields) => {
-            if (err) data({"error": "Could not populate poll."});
+            if (err) {
+                console.log(err);
+                data({"error": "Could not populate poll."});
+            }
             data( {"success": `Populated poll ${poll_id}.`} );
         })    
     )
