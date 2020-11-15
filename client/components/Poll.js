@@ -100,21 +100,81 @@ export default class Poll extends Component {
             );
         }
     };
+    voteYes(item) {
+        console.log("voting yes on " + item)
+        let vote_yes = {
+            method: 'POST',
+            body: JSON.stringify({
+                poll_id: this.props.route.params.poll_id,
+                imdb_id: this.state.movies[item]
+            }),
+            headers: {
+                'Accept':       'application/json',
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include'
+        }
+        const apiUrl = BaseUrl()+'/api/poll/v1/swipe/left';
+        fetch(apiUrl, vote_yes)
+            .then((response) => response.json())
+            .then((data) => {
+                console.log("Vote counted?", data)
+                if (data.success){
+                    console.log("success")
+                }
+                else{
+                    console.log("failed")
+                }
+            });
+    }
+    voteNo(item) {
+        console.log("voting no on " + item)
+        let vote_no = {
+            method: 'POST',
+            body: JSON.stringify({
+                poll_id: this.props.route.params.poll_id,
+                imdb_id: this.state.movies[item]
+            }),
+            headers: {
+                'Accept':       'application/json',
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include'
+        }
+        const apiUrl = BaseUrl()+'/api/poll/v1/swipe/left';
+        fetch(apiUrl, vote_no)
+            .then((response) => response.json())
+            .then((data) => {
+                console.log("Vote counted?", data)
+                if (data.success){
+                    console.log("success")
+                }
+                else{
+                    console.log("failed")
+                }
+            });
+    }
     render() {
-        console.log(this.state.movies)
+        console.log(this.props.route.params.profile)
         console.log("length: " + this.state.movies.length)
         return (
             <SafeAreaView style={styles.container}>
-            { (this.state.movies.length != undefined) ? 
+            { (this.state.movies.length != undefined && this.state.movies.length > 0) ? 
                 <Swiper
                     cards={this.state.movies}
                     renderCard={this.renderMovie}
-                    backgroundColor="red"
+                    backgroundColor="lightgrey"
                     disableTopSwipe={true}
                     disableBottomSwipe={true}
+                    onSwipedLeft={(cardIndex) => this.voteNo(cardIndex)}
+                    onSwipedRight={(cardIndex) => this.voteYes(cardIndex)}
                 >
                 </Swiper>
-                : <View></View> }
+                : <View>
+                    <Text>
+                        results go here
+                    </Text>
+                </View> }
             </SafeAreaView>
         );
     }

@@ -146,6 +146,7 @@ export default class HomeScreen extends Component {
                     <GroupList
                         groups={this.state.groups}
                         navigation={this.props.navigation}
+                        profile={this.state.profile}
                     />
                     <Button mode="contained" onPress={() => this.signOut()}> Sign out
                     </Button>

@@ -17,7 +17,7 @@ router.post('/create', async (req, res) => {
 
 // View movies in a poll
 router.get('/:id/movies', async (req, res) => {
-    result = await db.getPollMovies(req.params.id);
+    result = await db.getPollMovies(req.params.id, req.session.username);
     res.send(result);
 })
 
@@ -54,12 +54,25 @@ router.post('/swipe/right', async (req, res) => {
 // Swipe left (vote no)
 router.post('/swipe/left', async (req, res) => {
     username = req.session.username;
-    if (!username) res.send("Not logged in.");
+    if (!username){
+        console.log("Not signed in.")
+        res.send("Not logged in.");
+        return;
+    }
     poll_id = req.body.poll_id;
-    if (!poll_id) res.send("Poll ID is missing.");
+    if (!poll_id){
+        console.log("No poll specified.")
+        res.send("Poll ID is missing.");
+        return;
+    }
     imdb_id = req.body.imdb_id;
-    if (!imdb_id) res.send("IMDB ID is missing.");
+    if (!imdb_id){
+        console.log("No movie ID")
+        res.send("IMDB ID is missing.");
+        return;
+    }
     result = await db.vote(username, poll_id, imdb_id, 0);
+    console.log(result);
     res.send(result);
 })
 
