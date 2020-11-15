@@ -1,4 +1,3 @@
-
 import React, {
     Component
 } from 'react';
@@ -14,8 +13,9 @@ import {
     SafeAreaView
 } from 'react-native';
 import BaseUrl from '../config';
-import MovieDetail from './MovieDetail'
-import Swiper from 'react-native-deck-swiper'
+import MovieDetail from './MovieDetail';
+import Swiper from 'react-native-deck-swiper';
+import Results from './Results';
 
 const MemberItem = ({ item, onPress, style }) => (
     <View>
@@ -168,12 +168,11 @@ export default class Poll extends Component {
                     disableBottomSwipe={true}
                     onSwipedLeft={(cardIndex) => this.voteNo(cardIndex)}
                     onSwipedRight={(cardIndex) => this.voteYes(cardIndex)}
+                    onSwipedAll={() => this.setState( {movies: {}} ) }
                 >
                 </Swiper>
                 : <View>
-                    <Text>
-                        results go here
-                    </Text>
+                    <Results poll_id={this.props.route.params.poll_id} />
                 </View> }
             </SafeAreaView>
         );
