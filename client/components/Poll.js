@@ -14,6 +14,8 @@ import {
     SafeAreaView
 } from 'react-native';
 import BaseUrl from '../config';
+import MovieDetail from './MovieDetail'
+import Swiper from 'react-native-deck-swiper'
 
 const MemberItem = ({ item, onPress, style }) => (
     <View>
@@ -85,22 +87,94 @@ export default class Poll extends Component {
     groupOnClick(poll_id) {
         console.log(poll_id + " was pressed");
     }
-    renderMovie = ({ item }) => {
-        return (
-            <MemberItem
-                item={item}
-            />
-        );
+    renderMovie = ( item ) => {
+        if (this.state.movies != {}) {
+            return (
+                <MovieDetail
+                    id={item}
+                />
+            );
+        } else {
+            return (
+                <View></View>
+            );
+        }
     };
+    voteYes(item) {
+        console.log("voting yes on " + item)
+        let vote_yes = {
+            method: 'POST',
+            body: JSON.stringify({
+                poll_id: this.props.route.params.poll_id,
+                imdb_id: this.state.movies[item]
+            }),
+            headers: {
+                'Accept':       'application/json',
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include'
+        }
+        const apiUrl = BaseUrl()+'/api/poll/v1/swipe/left';
+        fetch(apiUrl, vote_yes)
+            .then((response) => response.json())
+            .then((data) => {
+                console.log("Vote counted?", data)
+                if (data.success){
+                    console.log("success")
+                }
+                else{
+                    console.log("failed")
+                }
+            });
+    }
+    voteNo(item) {
+        console.log("voting no on " + item)
+        let vote_no = {
+            method: 'POST',
+            body: JSON.stringify({
+                poll_id: this.props.route.params.poll_id,
+                imdb_id: this.state.movies[item]
+            }),
+            headers: {
+                'Accept':       'application/json',
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include'
+        }
+        const apiUrl = BaseUrl()+'/api/poll/v1/swipe/left';
+        fetch(apiUrl, vote_no)
+            .then((response) => response.json())
+            .then((data) => {
+                console.log("Vote counted?", data)
+                if (data.success){
+                    console.log("success")
+                }
+                else{
+                    console.log("failed")
+                }
+            });
+    }
     render() {
+        console.log(this.props.route.params.profile)
+        console.log("length: " + this.state.movies.length)
         return (
             <SafeAreaView style={styles.container}>
-                <Text>Movies in the poll:</Text>
-                <FlatList
-                    data={this.state.movies}
-                    renderItem={this.renderMovie}
-                    keyExtractor={(item) => String(item)}
-                />
+            { (this.state.movies.length != undefined && this.state.movies.length > 0) ? 
+                <Swiper
+                    cards={this.state.movies}
+                    renderCard={this.renderMovie}
+                    backgroundColor="lightgrey"
+                    disableTopSwipe={true}
+                    disableBottomSwipe={true}
+                    onSwipedLeft={(cardIndex) => this.voteNo(cardIndex)}
+                    onSwipedRight={(cardIndex) => this.voteYes(cardIndex)}
+                >
+                </Swiper>
+                : <View>
+                    <Text>
+                        results go here
+                    </Text>
+                </View> }
             </SafeAreaView>
         );
     }

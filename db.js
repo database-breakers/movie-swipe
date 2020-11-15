@@ -330,10 +330,15 @@ async function createPoll(poll_name, group_id) {
 
 async function getPollMovies(poll_id) {
     return new Promise (data =>
-        db.query("SELECT imdb_id FROM Choice WHERE poll_id = ?;", poll_id, (err, result, fields) => {
-            result = result.map(r => r.imdb_id);
-            data(result);
-        })    
+        db.query("SELECT imdb_id FROM Choice WHERE poll_id = ?;", poll_id, (err, allMovieResult, fields) => {
+            allMovieResult = allMovieResult.map(r => r.imdb_id);
+            db.query("SELECT imdb_id FROM vote WHERE poll_id = ? AND username = ?;", [poll_id, username], (err, myMovieResult, fields) => {
+                myMovieResult = myMovieResult.map(r => r.imdb_id);
+                result = allMovieResult.filter(a => !myMovieResult.includes(a));
+                console.log(result)
+                data(result);
+            })
+        })
     )
 }
 
@@ -378,7 +383,10 @@ async function deletePoll(poll_id) {
 async function vote(username, poll_id, imdb_id, response) {
     return new Promise (data =>
         db.query("INSERT INTO vote VALUES (?, ?, ?, ?);", [username, poll_id, imdb_id, response], (err, result, fields) => {
-            if (err) data({"error": "Your vote was not counted. The election has been corrupted."});
+            if (err) {
+                console.log(err);
+                data({"error": "Your vote was not counted. The election has been corrupted."});
+            }
             data( {"success": `You voted ${response} on movie ${imdb_id}.`} );
         })    
     )

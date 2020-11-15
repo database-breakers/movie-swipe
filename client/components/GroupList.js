@@ -67,11 +67,11 @@ export default class GroupList extends Component {
         return (
             <Item
                 item={item}
-                    onPress={() => this.props.navigation.navigate('Poll List', {
+                onPress={() => this.props.navigation.navigate('Poll List', {
                         group_id: item.group_id,
-                        navigation: this.props.navigation
-                    })
-                }
+                        navigation: this.props.navigation,
+                        profile: this.props.profile
+                    })}
             />
         );
     };
