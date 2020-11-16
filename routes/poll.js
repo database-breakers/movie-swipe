@@ -24,11 +24,20 @@ router.get('*', async(req, res, next) => {
 // Create a poll
 router.post('/create', async (req, res) => {
     name = req.body.poll_name;
-    if (!name) res.send("No poll name provided.");
+    if (!name){
+        res.send("No poll name provided.");
+        return;
+    }
     group_id = req.body.group_id;
-    if (!group_id) res.send("No group ID provided.");
+    if (!group_id){
+        res.send("No group ID provided.");
+        return;
+    }
     result1 = await db.createPoll(name, group_id);
-    if (result1.error) res.send(result1);
+    if (result1.error){
+        res.send(result1);
+        return;
+    }
     message = result1.success;
     result2 = await db.lastID();
     id = result2[0]["LAST_INSERT_ID()"];
@@ -61,11 +70,20 @@ router.get('/:id/results', async (req, res) => {
 router.post('/delete', async (req, res) => {
     if(confirmPollAccess(req.body.poll_id, req.session.username)){
         id = req.body.poll_id;
-        if (!id) res.send("Poll ID is missing.");
+        if (!id){
+            res.send("Poll ID is missing.");
+            return;
+        }
         result1 = await db.emptyPollVotes(id);
-        if (result1.error) res.send(result1);
+        if (result1.error){
+            res.send(result1);
+            return;
+        } 
         result2 = await db.emptyPollChoices(id);
-        if (result2.error) res.send(result2);
+        if (result2.error){
+            res.send(result2);
+            return;
+        }
         result3 = await db.deletePoll(id);
         res.send(result3);
     }
@@ -78,11 +96,20 @@ router.post('/delete', async (req, res) => {
 router.post('/swipe/right', async (req, res) => {
     if(confirmPollAccess(req.body.poll_id, req.session.username)){
         username = req.session.username;
-        if (!username) res.send("Not logged in.");
+        if (!username){
+            res.send("Not logged in.");
+            return;
+        }
         poll_id = req.body.poll_id;
-        if (!poll_id) res.send("Poll ID is missing.");
+        if (!poll_id){
+            res.send("Poll ID is missing.");
+            return;
+        }
         imdb_id = req.body.imdb_id;
-        if (!imdb_id) res.send("IMDB ID is missing.");
+        if (!imdb_id){
+            res.send("IMDB ID is missing.");
+            return;
+        }
         result = await db.vote(username, poll_id, imdb_id, 1);
         res.send(result);
     }
