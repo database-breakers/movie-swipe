@@ -80,7 +80,7 @@ export default class GroupList extends Component {
             <SafeAreaView style={styles.container}>
                 <Text>Here are your groups! Click on one to see the polls for that group.</Text>
                 <TouchableOpacity
-                    onPress={() => console.log("new group!")}
+                    onPress={() => this.props.navigation.navigate('Create Group', {})}
                     style={[styles.add_item]}>
                     <Text style={[styles.add_title]}>New group</Text>
                 </TouchableOpacity>
