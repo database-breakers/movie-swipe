@@ -10,7 +10,8 @@ import {
     Button,
     TextInput,
     TouchableOpacity,
-    SafeAreaView
+    SafeAreaView,
+    DeviceEventEmitter,
 } from 'react-native';
 import BaseUrl from '../config';
 
@@ -88,6 +89,12 @@ export default class PollList extends Component {
             polls: {},
             members: {},
         }
+        this.getUsers();
+        DeviceEventEmitter.addListener('pollMembersUpdate', ()=>{this.getUsers()})
+        DeviceEventEmitter.addListener('pollUpdate', ()=>{this.getUsers()})
+    }
+
+    getUsers(){
         const apiPollsUrl = BaseUrl() + '/api/group/v1/' + this.props.route.params.group_id + "/polls"
         const apiMembersUrl = BaseUrl() + '/api/group/v1/' + this.props.route.params.group_id + "/members"
         console.log("attemping to get polls: " + apiPollsUrl)
@@ -120,6 +127,7 @@ export default class PollList extends Component {
                 }
             })
     }
+
     getDisplayNames(members) {
         for (const member of members) {
             const apiNamesUrl = BaseUrl() + '/api/user/v1/profile/' + member;
@@ -179,6 +187,7 @@ export default class PollList extends Component {
                 console.log("Group deleted?", data)
                 if (data.success){
                     console.log("success")
+                    DeviceEventEmitter.emit('groupUpdate', {})
                     this.props.navigation.navigate('Home', {})
                 }
                 else{

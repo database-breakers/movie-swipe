@@ -9,6 +9,7 @@ import {
     Button,
     TextInput,
     TouchableOpacity,
+    DeviceEventEmitter,
 } from 'react-native';
 import BaseUrl from '../config';
 
@@ -77,10 +78,11 @@ export default class CreateGroup extends Component {
                 console.log("Group created?", data)
                 if (data.success) {
                     console.log("success")
+                    DeviceEventEmitter.emit('groupUpdate', {})
                     this.props.navigation.navigate("Home")
                 }
-                else {
-                    console.log("failed")
+                else { 
+                    console.log("failed to create")
                 }
             });
     }

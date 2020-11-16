@@ -10,6 +10,7 @@ import {
     Button,
     TextInput,
     TouchableOpacity,
+    DeviceEventEmitter,
 } from 'react-native';
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
@@ -173,9 +174,10 @@ export default class NewPoll extends Component {
                 console.log("Poll populated?", data)
                 if (data.success){
                     console.log("success")
-                    this.props.navigation.navigate('Poll', {
+                    this.props.navigation.replace('Poll', {
                         poll_id: poll_id,
                     })
+                    DeviceEventEmitter.emit("pollUpdate", {});
                 }
                 else{
                     console.log("failed")

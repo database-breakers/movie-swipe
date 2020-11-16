@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { Component } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, DeviceEventEmitter } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import BaseUrl from "../config";
 import GroupList from "./GroupList";
@@ -41,8 +41,10 @@ export default class HomeScreen extends Component {
       profile: {},
       username: "",
       password: "",
+      error: undefined,
       groups: {},
     };
+    DeviceEventEmitter.addListener('groupUpdate', () => {this.getGroups()})
   }
   checkLoginStatus() {
     const apiUrl = BaseUrl() + "/api/user/v1/profile";
@@ -98,10 +100,10 @@ export default class HomeScreen extends Component {
       .then((data) => {
         console.log("Signed in?", data);
         if (data.success) {
-          this.setState({ loggedIn: true, profile: data.profile });
+          this.setState({ loggedIn: true, profile: data.profile, error: undefined });
           this.getGroups();
         } else {
-          this.setState({ loggedIn: false });
+          this.setState({ loggedIn: false, error: "Some error." });
         }
       });
   }
@@ -156,7 +158,9 @@ export default class HomeScreen extends Component {
         <View>
         <HomeHeader />
         <View style={{ paddingTop:100, flex: 1, justifyContent: "Center", alignItems: "center" }}>
-         { (this.props.route !== undefined && this.props.route.params !== undefined && this.props.route.params.created) ? <Text style={{color:"green"}}>Sign in to access your new account.</Text> : <View/> }
+         { (this.props.route !== undefined && this.props.route.params !== undefined && this.props.route.params.created)
+          ? <Text style={{color:"green"}}>Sign in to access your new account.</Text> : <View/> }
+          { (this.state.error) ? <Text style={{color: "red"}}>Invalid username/password combination.</Text> : <View/> }
             <TextInput
               mode="flat"
               style={styles.inputContainerStyle}

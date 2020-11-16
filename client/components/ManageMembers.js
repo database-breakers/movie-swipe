@@ -9,6 +9,7 @@ import {
     Button,
     TextInput,
     TouchableOpacity,
+    DeviceEventEmitter,
 } from 'react-native';
 import BaseUrl from '../config';
 
@@ -78,6 +79,7 @@ export default class ManageMembers extends Component {
                 console.log("User added?", data)
                 if (data.success){
                     console.log("success")
+                    DeviceEventEmitter.emit('pollMembersUpdate', {})
                 }
                 else{
                     console.log("failed")
@@ -104,6 +106,7 @@ export default class ManageMembers extends Component {
                 console.log("User removed?", data)
                 if (data.success){
                     console.log("success")
+                    DeviceEventEmitter.emit('pollMembersUpdate', {})
                 }
                 else{
                     console.log("failed")
