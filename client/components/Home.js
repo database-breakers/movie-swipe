@@ -101,12 +101,8 @@ export default class HomeScreen extends Component {
       .then((data) => {
         console.log("Signed in?", data);
         if (data.success) {
-<<<<<<< HEAD
-          this.setState({ loggedIn: true, profile: data.profile });
-=======
           this.setState({ loggedIn: true, profile: data.profile, error: undefined });
           this.setState({ temporary_display: this.state.profile.display_name })
->>>>>>> 0eeadc9ce760e29f77f8783de4c4b4e6a85790c7
           this.getGroups();
         } else {
           this.setState({ loggedIn: false, error: "Some error." });
