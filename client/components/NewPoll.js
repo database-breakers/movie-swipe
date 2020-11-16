@@ -21,8 +21,6 @@ const styles = StyleSheet.create({
   },
   item: {
     padding: 10,
-    flex: 1,
-    alignItems: "center",
     marginVertical: 8,
     marginHorizontal: 8,
     borderRadius: 10,
@@ -31,7 +29,6 @@ const styles = StyleSheet.create({
     paddingTop: 5,
     paddingBottom: 10,
     backgroundColor: "lightgrey",
-    maxHeight: 40,
   },
   title: {
     fontSize: 16,
@@ -182,16 +179,16 @@ export default class NewPoll extends Component {
           value={this.state.numMovies}
           onChangeText={(numMovies) => this.setState({ numMovies })}
         />
-        <Text>The following fields are optional:</Text>
+        <Text>The following fields are optional.</Text>
         <View
-          style={{
-            flex: 1,
-            justifyContent: "Center",
-            flexDirection: "row",
-            height: 20,
-            alignItems: "baseline",
-          }}
-        >
+            style={{
+                borderBottomColor: 'gray',
+                borderBottomWidth: 2,
+                width:"25%",
+                marginBottom: 10,
+                marginTop: 10,
+            }}
+        />
           <Text>Release date:</Text>
           <TextInput
             mode="flat"
@@ -208,16 +205,7 @@ export default class NewPoll extends Component {
             value={this.state.maxYear}
             onChangeText={(maxYear) => this.setState({ maxYear })}
           />
-        </View>
 
-        <View
-          style={{
-            flex: 1,
-            flexDirection: "row",
-            height: 20,
-            alignItems: "baseline",
-          }}
-        >
           <Text>Length:</Text>
           <TextInput
             mode="flat"
@@ -234,7 +222,6 @@ export default class NewPoll extends Component {
             value={this.state.maxRuntime}
             onChangeText={(maxRuntime) => this.setState({ maxRuntime })}
           />
-        </View>
         <Text>Minimum rating</Text>
         <TextInput
           mode="flat"

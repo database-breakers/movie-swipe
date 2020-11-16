@@ -55,12 +55,10 @@ export default class ChangePassword extends Component {
         this.state = {
             password: "",
             old_password: "",
+            error: undefined,
         };
     }
     changePassword() {
-        console.log("Changing password...1")
-        console.log(this.state)
-        console.log(this.props.route.params.username)
         let change_password= {
             method: 'POST',
             body: JSON.stringify({
@@ -74,9 +72,7 @@ export default class ChangePassword extends Component {
             },
             credentials: 'include'
         }
-        console.log("Changing password...2")
         const apiUrl = BaseUrl()+'/api/user/v1/changepassword';
-        console.log("Changing password...3")
         fetch(apiUrl, change_password)
             .then((response) => response.json())
             .then((data) => {
@@ -87,14 +83,17 @@ export default class ChangePassword extends Component {
                 }
                 else{
                     console.log("failed")
+                    this.setState({
+                        error: "failed"
+                    })
                 }
             });
             console.log("Changing password...4")
     }
     render() {
-        console.log(this.state)
         return (
             <View style={{flex: 1, justifyContent: 'Center', alignItems: 'center'}}>
+                { (this.state.error) ? <Text style={{color:"red"}}>Error setting new password.</Text> : <View/> }
                 <TextInput 
                 mode="flat"
                 style={styles.item}

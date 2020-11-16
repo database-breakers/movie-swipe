@@ -69,7 +69,6 @@ export default class GroupList extends Component {
                 item={item}
                 onPress={() => this.props.navigation.navigate('Poll List', {
                         group_id: item.group_id,
-                        navigation: this.props.navigation,
                         profile: this.props.profile
                     })}
             />
