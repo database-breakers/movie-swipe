@@ -34,15 +34,10 @@ var corsOptions = {
 
 if(process.env.NODE_ENV !== "production"){
   app.use(cors(corsOptions));
-  app.use(session({
-    secret: sessionSecret,
-    resave: true,
-    saveUninitialized: true,
-    cookie: { sameSite: 'strict' },
-  }));
 }
-else{
-  var sessionStore = new MySQLStore({}/* session store options */, connection);
+
+
+var sessionStore = new MySQLStore({}/* session store options */, db.db);
   app.use(session({
     secret: sessionSecret,
     resave: false,
@@ -50,7 +45,6 @@ else{
     store: sessionStore,
     cookie: { sameSite: 'strict' },
   }));
-}
 
 
 app.use(express.static(path.join(__dirname, 'client/web-build')));

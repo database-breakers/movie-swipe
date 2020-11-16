@@ -418,6 +418,7 @@ async function generateTestUsers(){
 }
 
 module.exports = {
+    db,
     getActor,
     getDirector,
     getGenre,
