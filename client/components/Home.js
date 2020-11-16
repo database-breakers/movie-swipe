@@ -154,11 +154,9 @@ export default class HomeScreen extends Component {
     } else {
       return (
         <View>
-          <HomeHeader />
-
-          <View
-            style={{ flex: 1, justifyContent: "Center", alignItems: "center" }}
-          >
+        <HomeHeader />
+        <View style={{ paddingTop:100, flex: 1, justifyContent: "Center", alignItems: "center" }}>
+         { (this.props.route !== undefined && this.props.route.params !== undefined && this.props.route.params.created) ? <Text style={{color:"green"}}>Sign in to access your new account.</Text> : <View/> }
             <TextInput
               mode="flat"
               style={styles.inputContainerStyle}
@@ -174,15 +172,15 @@ export default class HomeScreen extends Component {
               value={this.state.password}
               onChangeText={(password) => this.setState({ password })}
             />
-            <Button mode="contained" onPress={() => this.signIn()}>
+            <Button mode="contained" style={{margin: 10}} onPress={() => this.signIn()}>
               Log In
             </Button>
+            <Text style={{padding: 20}}>or</Text>
             <Button
+              style={{margin: 10}}
               mode="contained"
               onPress={() =>
-                this.props.navigation.navigate("SignUp", {
-                  navigation: this.props.navigation,
-                })
+                this.props.navigation.navigate("Sign Up", {})
               }
             >
               Sign Up

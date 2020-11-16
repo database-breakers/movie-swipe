@@ -45,7 +45,7 @@ export default function App() {
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Poll List" component={PollList} />
         <Stack.Screen name="Poll" component={Poll} />
-        <Stack.Screen name="SignUp" component={SignUp}/>
+        <Stack.Screen name="Sign Up" component={SignUp}/>
         <Stack.Screen name="New Poll" component={NewPoll} />
         <Stack.Screen name="Manage Members" component={ManageMembers} />
         <Stack.Screen name="Create Group" component={CreateGroup} />
