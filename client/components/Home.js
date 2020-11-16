@@ -43,6 +43,7 @@ export default class HomeScreen extends Component {
       password: "",
       error: undefined,
       groups: {},
+      temporary_display: "",
     };
     DeviceEventEmitter.addListener('groupUpdate', () => {this.getGroups()})
   }
@@ -100,7 +101,12 @@ export default class HomeScreen extends Component {
       .then((data) => {
         console.log("Signed in?", data);
         if (data.success) {
+<<<<<<< HEAD
+          this.setState({ loggedIn: true, profile: data.profile });
+=======
           this.setState({ loggedIn: true, profile: data.profile, error: undefined });
+          this.setState({ temporary_display: this.state.profile.display_name })
+>>>>>>> 0eeadc9ce760e29f77f8783de4c4b4e6a85790c7
           this.getGroups();
         } else {
           this.setState({ loggedIn: false, error: "Some error." });
@@ -126,6 +132,33 @@ export default class HomeScreen extends Component {
         }
       });
   }
+  changeDisplayName() {
+    console.log(this.state.temporary_display)
+    let change = {
+      method: "POST",
+      body: JSON.stringify({
+        displayname: this.state.temporary_display
+      }),
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    };
+    const apiUrl = BaseUrl() + "/api/user/v1/changedisplay";
+    fetch(apiUrl, change)
+        .then((response) => response.json())
+        .then((data) => {
+            console.log("Name updated?", data)
+            if (data.success){
+                console.log("success")
+                this.checkLoginStatus();
+            }
+            else{
+                console.log("failed")
+            }
+        });
+  }
 
   componentDidMount() {
     this.checkLoginStatus();
@@ -138,20 +171,31 @@ export default class HomeScreen extends Component {
   render() {
     if (this.state.loggedIn) {
       return (
-        <View
-          style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
-        >
-          <Text>Welcome back, {this.state.profile.display_name}!</Text>
-          <GroupList
-            groups={this.state.groups}
-            navigation={this.props.navigation}
-            profile={this.state.profile}
-          />
-          <Button mode="contained" onPress={() => this.signOut()}>
-            {" "}
+          <View
+              style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+          >
+              <Text>Welcome back, {this.state.profile.display_name}!</Text>
+              <GroupList
+                  groups={this.state.groups}
+                  navigation={this.props.navigation}
+                  profile={this.state.profile}
+              />
+              <TextInput
+                  mode="flat"
+                  style={styles.item}
+                  label="Display name"
+                  value={this.state.temporary_display}
+                  onChangeText={(temporary_display) => this.setState({ temporary_display })}
+              />
+              <Button mode="contained" onPress={() => this.changeDisplayName()}>
+                  {" "}
+           Set display name
+          </Button>
+              <Button mode="contained" onPress={() => this.signOut()}>
+                  {" "}
             Sign out
           </Button>
-        </View>
+          </View>
       );
     } else {
       return (
