@@ -49,6 +49,10 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: "darkgreen",
     },
+    delete_title: {
+        fontSize: 16,
+        color: "darkred",
+    },
     add_item: {
         padding: 10,
         marginVertical: 8,
@@ -61,6 +65,19 @@ const styles = StyleSheet.create({
         backgroundColor: "lightgrey",
         borderWidth: "thick",
         borderColor: "lightgreen",
+    },
+    delete_group: {
+        padding: 10,
+        marginVertical: 8,
+        marginHorizontal: 8,
+        borderRadius: 10,
+        paddingLeft: 10,
+        paddingRight: 10,
+        paddingTop: 5,
+        paddingBottom: 10,
+        backgroundColor: "lightgrey",
+        borderWidth: "thick",
+        borderColor: "red",
     },
 });
 
@@ -115,14 +132,40 @@ export default class PollList extends Component {
                 })}
             />
         );
-    };
+    }
     renderMember = ({ item }) => {
         return (
             <MemberItem
                 item={item}
             />
         );
-    };
+    }
+    deleteGroup() {
+        let delete_group = {
+            method: 'POST',
+            body: JSON.stringify({
+                group_id: this.props.route.params.group_id,
+            }),
+            headers: {
+                'Accept':       'application/json',
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include'
+        }
+        const apiUrl = BaseUrl()+'/api/group/v1/delete';
+        fetch(apiUrl, delete_group)
+            .then((response) => response.json())
+            .then((data) => {
+                console.log("Group deleted?", data)
+                if (data.success){
+                    console.log("success")
+                    this.props.navigation.navigate('Home', {})
+                }
+                else{
+                    console.log("failed")
+                }
+            });
+    }
     render() {
         console.log(this.props)
         return (
@@ -144,9 +187,11 @@ export default class PollList extends Component {
                 }
                 <Text>Group members</Text>
                 <TouchableOpacity 
-                    onPress={() => console.log("new poll!")}
+                    onPress={() => this.props.navigation.navigate('Manage Members', {
+                            group_id: this.props.route.params.group_id
+                        })}
                     style={[styles.add_item]}>
-                    <Text style={[styles.add_title]}>New group</Text>
+                    <Text style={[styles.add_title]}>Manage members</Text>
                 </TouchableOpacity>
                 { (this.state.members != undefined && this.state.members.length > 0) ?
                 <FlatList
@@ -156,6 +201,11 @@ export default class PollList extends Component {
                     horizontal={true}
                 /> : <View/>
                 }
+                <TouchableOpacity 
+                    onPress={() => this.deleteGroup()}
+                    style={[styles.delete_group]}>
+                    <Text style={[styles.delete_title]}>Delete Group</Text>
+                </TouchableOpacity>
             </SafeAreaView>
         );
     }
