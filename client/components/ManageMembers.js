@@ -118,7 +118,7 @@ export default class ManageMembers extends Component {
         console.log(this.state)
         return (
             <View style={{flex: 1, justifyContent: 'Center', alignItems: 'center'}}>
-                <Text>Name:</Text>
+                <Text>Username:</Text>
                 <TextInput 
                 mode="flat"
                 style={styles.item}
