@@ -156,7 +156,8 @@ export default class PollList extends Component {
                 item={item}
                 onPress={() => this.props.navigation.navigate('Poll', {
                     poll_id: item.poll_id,
-                    profile: this.props.route.params.profile
+                    group_id: this.props.route.params.group_id,
+                    profile: this.props.route.params.profile,
                 })}
             />
         );

@@ -187,6 +187,12 @@ export default class HomeScreen extends Component {
                   {" "}
            Set display name
           </Button>
+              <Button mode="contained" onPress={() => this.props.navigation.navigate("Change Password", {
+                  username: this.state.profile.username,
+              })}>
+                  {" "}
+                  Reset password 
+              </Button>
               <Button mode="contained" onPress={() => this.signOut()}>
                   {" "}
             Sign out
