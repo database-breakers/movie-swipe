@@ -328,7 +328,7 @@ async function createPoll(poll_name, group_id) {
     )
 }
 
-async function getPollMovies(poll_id) {
+async function getPollMovies(poll_id, username) {
     return new Promise (data =>
         db.query("SELECT imdb_id FROM Choice WHERE poll_id = ?;", poll_id, (err, allMovieResult, fields) => {
             allMovieResult = allMovieResult.map(r => r.imdb_id);
@@ -418,6 +418,7 @@ async function generateTestUsers(){
 }
 
 module.exports = {
+    db,
     getActor,
     getDirector,
     getGenre,

@@ -10,6 +10,9 @@ import PollList from './components/PollList'
 import Poll from './components/Poll'
 import SignUp from './components/SignUp'
 import NewPoll from './components/NewPoll'
+import ManageMembers from './components/ManageMembers'
+import CreateGroup from './components/CreateGroup'
+import ChangePassword from './components/ChangePassword'
 
 const Stack = createStackNavigator();
 
@@ -43,8 +46,11 @@ export default function App() {
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Poll List" component={PollList} />
         <Stack.Screen name="Poll" component={Poll} />
-        <Stack.Screen name="SignUp" component={SignUp}/>
+        <Stack.Screen name="Sign Up" component={SignUp}/>
         <Stack.Screen name="New Poll" component={NewPoll} />
+        <Stack.Screen name="Manage Members" component={ManageMembers} />
+        <Stack.Screen name="Create Group" component={CreateGroup} />
+        <Stack.Screen name="Change Password" component={ChangePassword} />
       </Stack.Navigator>
     }</NavigationContainer>
   </PaperProvider>

@@ -10,18 +10,13 @@ import {
     Button,
     TextInput,
     TouchableOpacity,
-    SafeAreaView
+    SafeAreaView,
+    DeviceEventEmitter
 } from 'react-native';
 import BaseUrl from '../config';
 import MovieDetail from './MovieDetail';
 import Swiper from 'react-native-deck-swiper';
 import Results from './Results';
-
-const MemberItem = ({ item, onPress, style }) => (
-    <View>
-        <Text style={styles.title}>{"  " + item}</Text>
-    </View>
-);
 
 const styles = StyleSheet.create({
     container: {
@@ -60,6 +55,19 @@ const styles = StyleSheet.create({
         borderWidth: "thick",
         borderColor: "lightgreen",
     },
+    delete_group: {
+        padding: 10,
+        marginVertical: 8,
+        marginHorizontal: 8,
+        borderRadius: 10,
+        paddingLeft: 10,
+        paddingRight: 10,
+        paddingTop: 5,
+        paddingBottom: 10,
+        backgroundColor: "lightgrey",
+        borderWidth: "thick",
+        borderColor: "red",
+    },
 });
 
 export default class Poll extends Component {
@@ -83,9 +91,6 @@ export default class Poll extends Component {
                     this.setState({ movies: data })
                 }
             })
-    }
-    groupOnClick(poll_id) {
-        console.log(poll_id + " was pressed");
     }
     renderMovie = ( item ) => {
         if (this.state.movies != {}) {
@@ -154,6 +159,37 @@ export default class Poll extends Component {
                 }
             });
     }
+    deletePoll() {
+        this.props.route.params.poll_id
+        let delete_poll = {
+            method: 'POST',
+            body: JSON.stringify({
+                poll_id: this.props.route.params.poll_id
+            }),
+            headers: {
+                'Accept':       'application/json',
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include'
+        }
+        const apiUrl = BaseUrl()+'/api/poll/v1/delete';
+        fetch(apiUrl, delete_poll)
+            .then((response) => response.json())
+            .then((data) => {
+                console.log("Vote counted?", data)
+                if (data.success){
+                    console.log("success")
+                    DeviceEventEmitter.emit('pollUpdate', {})
+                    this.props.navigation.navigate('Poll List', {
+                        group_id: this.props.route.params.group_id,
+                        profile: this.props.route.params.profile
+                    })
+                }
+                else{
+                    console.log("failed")
+                }
+            });
+    }
     render() {
         console.log(this.props.route.params.profile)
         console.log("length: " + this.state.movies.length)
@@ -173,6 +209,11 @@ export default class Poll extends Component {
                 </Swiper>
                 : <View>
                     <Results poll_id={this.props.route.params.poll_id} />
+                    <TouchableOpacity 
+                        onPress={() => this.deletePoll()}
+                        style={[styles.delete_group]}>
+                        <Text style={[styles.delete_title]}>Delete Poll</Text>
+                    </TouchableOpacity>
                 </View> }
             </SafeAreaView>
         );

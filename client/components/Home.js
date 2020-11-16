@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { Component } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, DeviceEventEmitter } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import BaseUrl from "../config";
 import GroupList from "./GroupList";
@@ -41,8 +41,11 @@ export default class HomeScreen extends Component {
       profile: {},
       username: "",
       password: "",
+      error: undefined,
       groups: {},
+      temporary_display: "",
     };
+    DeviceEventEmitter.addListener('groupUpdate', () => {this.getGroups()})
   }
   checkLoginStatus() {
     const apiUrl = BaseUrl() + "/api/user/v1/profile";
@@ -98,10 +101,11 @@ export default class HomeScreen extends Component {
       .then((data) => {
         console.log("Signed in?", data);
         if (data.success) {
-          this.setState({ loggedIn: true, profile: data.profile });
+          this.setState({ loggedIn: true, profile: data.profile, error: undefined });
+          this.setState({ temporary_display: this.state.profile.display_name })
           this.getGroups();
         } else {
-          this.setState({ loggedIn: false });
+          this.setState({ loggedIn: false, error: "Some error." });
         }
       });
   }
@@ -124,6 +128,33 @@ export default class HomeScreen extends Component {
         }
       });
   }
+  changeDisplayName() {
+    console.log(this.state.temporary_display)
+    let change = {
+      method: "POST",
+      body: JSON.stringify({
+        displayname: this.state.temporary_display
+      }),
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    };
+    const apiUrl = BaseUrl() + "/api/user/v1/changedisplay";
+    fetch(apiUrl, change)
+        .then((response) => response.json())
+        .then((data) => {
+            console.log("Name updated?", data)
+            if (data.success){
+                console.log("success")
+                this.checkLoginStatus();
+            }
+            else{
+                console.log("failed")
+            }
+        });
+  }
 
   componentDidMount() {
     this.checkLoginStatus();
@@ -136,29 +167,46 @@ export default class HomeScreen extends Component {
   render() {
     if (this.state.loggedIn) {
       return (
-        <View
-          style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
-        >
-          <Text>Welcome back, {this.state.profile.display_name}!</Text>
-          <GroupList
-            groups={this.state.groups}
-            navigation={this.props.navigation}
-            profile={this.state.profile}
-          />
-          <Button mode="contained" onPress={() => this.signOut()}>
-            {" "}
+          <View
+              style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+          >
+              <Text>Welcome back, {this.state.profile.display_name}!</Text>
+              <GroupList
+                  groups={this.state.groups}
+                  navigation={this.props.navigation}
+                  profile={this.state.profile}
+              />
+              <TextInput
+                  mode="flat"
+                  style={styles.item}
+                  label="Display name"
+                  value={this.state.temporary_display}
+                  onChangeText={(temporary_display) => this.setState({ temporary_display })}
+              />
+              <Button mode="contained" onPress={() => this.changeDisplayName()}>
+                  {" "}
+           Set display name
+          </Button>
+              <Button mode="contained" onPress={() => this.props.navigation.navigate("Change Password", {
+                  username: this.state.profile.username,
+              })}>
+                  {" "}
+                  Reset password 
+              </Button>
+              <Button mode="contained" onPress={() => this.signOut()}>
+                  {" "}
             Sign out
           </Button>
-        </View>
+          </View>
       );
     } else {
       return (
         <View>
-          <HomeHeader />
-
-          <View
-            style={{ flex: 1, justifyContent: "Center", alignItems: "center" }}
-          >
+        <HomeHeader />
+        <View style={{ paddingTop:100, flex: 1, justifyContent: "Center", alignItems: "center" }}>
+         { (this.props.route !== undefined && this.props.route.params !== undefined && this.props.route.params.created)
+          ? <Text style={{color:"green"}}>Sign in to access your new account.</Text> : <View/> }
+          { (this.state.error) ? <Text style={{color: "red"}}>Invalid username/password combination.</Text> : <View/> }
             <TextInput
               mode="flat"
               style={styles.inputContainerStyle}
@@ -174,15 +222,15 @@ export default class HomeScreen extends Component {
               value={this.state.password}
               onChangeText={(password) => this.setState({ password })}
             />
-            <Button mode="contained" onPress={() => this.signIn()}>
+            <Button mode="contained" style={{margin: 10}} onPress={() => this.signIn()}>
               Log In
             </Button>
+            <Text style={{padding: 20}}>or</Text>
             <Button
+              style={{margin: 10}}
               mode="contained"
               onPress={() =>
-                this.props.navigation.navigate("SignUp", {
-                  navigation: this.props.navigation,
-                })
+                this.props.navigation.navigate("Sign Up", {})
               }
             >
               Sign Up

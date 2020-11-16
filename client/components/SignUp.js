@@ -18,13 +18,15 @@ export default class SignUp extends Component {
       profile: {},
       username: "",
       password: "",
+      confirmPassword: "",
       groups: {},
     };
   }
 
-  createAccount(username, password, passwordConfirmed) {
-    if (password !== passwordConfirmed){
-        this.setState({error: "passwords do not match"});
+  createAccount() {
+    if (this.state.password !== this.state.confirmPassword){
+        this.setState({error: "Passwords do not match"});
+        return;
     }
     let login = {
         method: "POST",
@@ -43,10 +45,12 @@ export default class SignUp extends Component {
         .then((response) => response.json())
         .then((data) => {
           console.log("Signed in?", data);
-          if (data.success) {
+          if (!data.error) {
+            console.log()
             this.setState({ loggedIn: true });
+            this.props.navigation.replace("Home", {created: "Sign in to access account."});
           } else {
-            this.setState({ loggedIn: false });
+            this.setState({error: data.error, loggedIn: false });
           }
         });
 
@@ -79,15 +83,15 @@ export default class SignUp extends Component {
             </Text>
           </Text>
         </Surface>
-        <View
-          style={{ flex: 1, justifyContent: "Center", alignItems: "center" }}
-        >
+        <View style={{ flex: 1, justifyContent: "Center", alignItems: "center", paddingTop:100 }} >
+          {(this.state.error) ? <Text mode="bold" style={{color:"red"}}>{this.state.error}</Text> : <View/>}
           <TextInput
             mode="flat"
             style={styles.inputContainerStyle}
             label="Username"
             value={this.state.username}
             onChangeText={(username) => this.setState({ username })}
+
           />
           <TextInput
             mode="flat"
@@ -97,7 +101,15 @@ export default class SignUp extends Component {
             value={this.state.password}
             onChangeText={(password) => this.setState({ password })}
           />
-          <Button mode="contained" onPress={() => this.createAccount()}>
+          <TextInput
+            mode="flat"
+            style={styles.inputContainerStyle}
+            secureTextEntry
+            label="Confirm Password"
+            value={this.state.confirmPassword}
+            onChangeText={(confirmPassword) => this.setState({ confirmPassword })}
+          />
+          <Button style={{margin:10}} mode="contained" onPress={() => this.createAccount()}>
             Create
           </Button>
         </View>

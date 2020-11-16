@@ -10,7 +10,8 @@ import {
     Button,
     TextInput,
     TouchableOpacity,
-    SafeAreaView
+    SafeAreaView,
+    DeviceEventEmitter,
 } from 'react-native';
 import BaseUrl from '../config';
 
@@ -49,6 +50,10 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: "darkgreen",
     },
+    delete_title: {
+        fontSize: 16,
+        color: "darkred",
+    },
     add_item: {
         padding: 10,
         marginVertical: 8,
@@ -62,6 +67,19 @@ const styles = StyleSheet.create({
         borderWidth: "thick",
         borderColor: "lightgreen",
     },
+    delete_group: {
+        padding: 10,
+        marginVertical: 8,
+        marginHorizontal: 8,
+        borderRadius: 10,
+        paddingLeft: 10,
+        paddingRight: 10,
+        paddingTop: 5,
+        paddingBottom: 10,
+        backgroundColor: "lightgrey",
+        borderWidth: "thick",
+        borderColor: "red",
+    },
 });
 
 export default class PollList extends Component {
@@ -71,6 +89,12 @@ export default class PollList extends Component {
             polls: {},
             members: {},
         }
+        this.getUsers();
+        DeviceEventEmitter.addListener('pollMembersUpdate', ()=>{this.getUsers()})
+        DeviceEventEmitter.addListener('pollUpdate', ()=>{this.getUsers()})
+    }
+
+    getUsers(){
         const apiPollsUrl = BaseUrl() + '/api/group/v1/' + this.props.route.params.group_id + "/polls"
         const apiMembersUrl = BaseUrl() + '/api/group/v1/' + this.props.route.params.group_id + "/members"
         console.log("attemping to get polls: " + apiPollsUrl)
@@ -98,9 +122,30 @@ export default class PollList extends Component {
                 else {
                     // Logged in.
                     console.log(data);
-                    this.setState({ members: data })
+                    // this.setState({ members: data })
+                    this.getDisplayNames(data);
                 }
             })
+    }
+
+    getDisplayNames(members) {
+        for (const member of members) {
+            const apiNamesUrl = BaseUrl() + '/api/user/v1/profile/' + member;
+            var display_names = [];
+            fetch(apiNamesUrl, { credentials: "include" })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.error) {
+                        // Couldn't fetch groups.
+                        return;
+                    }
+                    else {
+                        // Logged in.
+                        display_names.push(data);
+                        this.setState({members: display_names});
+                    }
+                })
+        }
     }
     groupOnClick(poll_id) {
         console.log(poll_id + " was pressed");
@@ -111,18 +156,46 @@ export default class PollList extends Component {
                 item={item}
                 onPress={() => this.props.navigation.navigate('Poll', {
                     poll_id: item.poll_id,
-                    profile: this.props.route.params.profile
+                    group_id: this.props.route.params.group_id,
+                    profile: this.props.route.params.profile,
                 })}
             />
         );
-    };
+    }
     renderMember = ({ item }) => {
         return (
             <MemberItem
-                item={item}
+                item={item.display_name}
             />
         );
-    };
+    }
+    deleteGroup() {
+        let delete_group = {
+            method: 'POST',
+            body: JSON.stringify({
+                group_id: this.props.route.params.group_id,
+            }),
+            headers: {
+                'Accept':       'application/json',
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include'
+        }
+        const apiUrl = BaseUrl()+'/api/group/v1/delete';
+        fetch(apiUrl, delete_group)
+            .then((response) => response.json())
+            .then((data) => {
+                console.log("Group deleted?", data)
+                if (data.success){
+                    console.log("success")
+                    DeviceEventEmitter.emit('groupUpdate', {})
+                    this.props.navigation.navigate('Home', {})
+                }
+                else{
+                    console.log("failed")
+                }
+            });
+    }
     render() {
         console.log(this.props)
         return (
@@ -144,18 +217,25 @@ export default class PollList extends Component {
                 }
                 <Text>Group members</Text>
                 <TouchableOpacity 
-                    onPress={() => console.log("new poll!")}
+                    onPress={() => this.props.navigation.navigate('Manage Members', {
+                            group_id: this.props.route.params.group_id
+                        })}
                     style={[styles.add_item]}>
-                    <Text style={[styles.add_title]}>New group</Text>
+                    <Text style={[styles.add_title]}>Manage members</Text>
                 </TouchableOpacity>
                 { (this.state.members != undefined && this.state.members.length > 0) ?
                 <FlatList
                     data={this.state.members}
                     renderItem={this.renderMember}
-                    keyExtractor={(item) => String(item)}
-                    horizontal={true}
+                    keyExtractor={(item) => String(item.username)}
+                    horizontal={false}
                 /> : <View/>
                 }
+                <TouchableOpacity 
+                    onPress={() => this.deleteGroup()}
+                    style={[styles.delete_group]}>
+                    <Text style={[styles.delete_title]}>Delete Group</Text>
+                </TouchableOpacity>
             </SafeAreaView>
         );
     }
