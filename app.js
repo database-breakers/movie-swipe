@@ -6,6 +6,7 @@ const app = express();
 require('dotenv').config()
 const db = require("./db");
 const cors = require('cors');
+var MySQLStore = require('express-mysql-session')(session);
 
 var moviesRoute = require('./routes/movies.js')
 var userRoute = require('./routes/user.js')
@@ -17,12 +18,6 @@ const sessionSecret = process.env.SESSIONSECRET;
 
 app.use(express.json());
 app.use(bodyParser.json());
-app.use(session({
-	secret: sessionSecret,
-	resave: true,
-	saveUninitialized: true,
-  cookie: { sameSite: 'strict' },
-}));
 
 var whitelist = ['http://localhost:19006', undefined, "http://localhost:5000"]
 var corsOptions = {
@@ -38,7 +33,23 @@ var corsOptions = {
 }
 
 if(process.env.NODE_ENV !== "production"){
-	app.use(cors(corsOptions));
+  app.use(cors(corsOptions));
+  app.use(session({
+    secret: sessionSecret,
+    resave: true,
+    saveUninitialized: true,
+    cookie: { sameSite: 'strict' },
+  }));
+}
+else{
+  var sessionStore = new MySQLStore({}/* session store options */, connection);
+  app.use(session({
+    secret: sessionSecret,
+    resave: false,
+    saveUninitialized: false,
+    store: sessionStore,
+    cookie: { sameSite: 'strict' },
+  }));
 }
 
 
