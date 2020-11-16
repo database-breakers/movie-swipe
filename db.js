@@ -265,6 +265,15 @@ async function getPolls(groupID){
     )
 }
 
+async function getGroupFromPoll(pollID){
+    return new Promise (data =>
+        db.query("SELECT group_id FROM Poll WHERE poll_id = ?", pollID, (err, result, fields) => {
+            if(err) data({error: err});
+            else data(result[0]);
+        })    
+    )
+}
+
 async function createGroup(group_name) {
     return new Promise (data =>
         db.query("INSERT INTO UserGroup (group_name) VALUES (?);", group_name, (err, result, fields) => {
@@ -449,5 +458,6 @@ module.exports = {
     emptyPollChoices,
     deletePoll,
     vote,
-    populatePoll
+    populatePoll,
+    getGroupFromPoll
 };
